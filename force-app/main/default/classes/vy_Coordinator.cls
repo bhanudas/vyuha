@@ -1,28 +1,43 @@
 // Coordinator
-// Container for Batchable control
+// Container for control and monitoring
 
-global with sharing class vy_Coordinator implements Database.Batchable < sobject >, Database.Stateful {
+global with sharing class vy_Coordinator {
 
-    private vy_Formation formation;
+    global vy_Coordinator () {
+    }
+    
+    global void writeLogEntry ( vy_Processor processor ) {
 
-    global vy_Coordinator ( vy_Formation formation ) {
-        this.formation = formation;
+        // check to see if Job ID already exists
+        List < vyuha_log__c > vlList = fetchLogEntry ( processor.getApexJobId ());
+        
+        ID existingVl;
+
+        if ( vlList.size () != 0 ) {
+            existingVl = vlList[0].id;
+        }
+
+        vyuha_log__c vl = new vyuha_log__c ();
+        vl.Apex_Job_ID__c = processor.getApexJobId ();
+        vl.Status__c = processor.getStatus ().name ();
+        vl.id = existingVl;
+
+        upsert vl;
+
     }
 
-    global Database.QueryLocator start ( Database.BatchableContext batchContext ) {
+    private static List < vyuha_log__c > fetchLogEntry ( ID apexJobId ) {
+        return new List < vyuha_log__c > ([ SELECT ID, Status__c FROM vyuha_log__c WHERE Apex_Job_ID__c = : apexJobId FOR UPDATE ]);
+    }
 
-		return null;
-	}
+    global static string getJobStatus ( ID apexJobId ) {
+        List < vyuha_log__c > vlList = fetchLogEntry ( apexJobId );
 
-	global void execute ( Database.BatchableContext batchContext, List < sObject > listToProcess ) {
+        if ( vlList.size () != 0 ) {
+            return vlList[0].status__c;
+        } else {
+            return null;
+        }
+    }
 
-        vy_WorkFactory workFactory = new vy_WorkFactory ( this.formation, listToProcess );
-        workFactory.execute ();
-
-	}
-
-	global void finish ( Database.BatchableContext batchContext ) {
-
-
-	}
 }
