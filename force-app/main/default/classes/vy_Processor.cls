@@ -60,7 +60,12 @@ global with sharing class vy_Processor implements Database.Batchable < sobject >
         
         coordinator.writeLogEntry ( this );
         System.debug ( 'vy_Processor - finish () ');
-        
+
+        // fetch and run next Formation
+        vy_Formation nextFormation = this.formation.getNextFormation ();
+        if ( nextFormation != null ) {
+            nextFormation.launch ();
+        }
 	}
 
     global JobStatus getStatus () {
