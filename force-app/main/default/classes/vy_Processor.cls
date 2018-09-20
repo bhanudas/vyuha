@@ -1,6 +1,6 @@
 global with sharing class vy_Processor implements Database.Batchable < sobject >, Database.Stateful {
 
-    global enum JobStatus { INITIALIZED, QUERY, PROCESSING, COMPLETED, ERROR }
+    global enum JobStatus { SCHEDULED, INITIALIZED, QUERY, PROCESSING, COMPLETED, ERROR }
 
     private vy_Formation formation;
     private vy_Coordinator coordinator;
@@ -49,10 +49,18 @@ global with sharing class vy_Processor implements Database.Batchable < sobject >
 	}
 
 	global void finish ( Database.BatchableContext batchContext ) {
-        this.status = JobStatus.COMPLETED;
-        coordinator.writeLogEntry ( this );
+
+        // set status
+        if ( this.status == JobStatus.ERROR ) {
+            // an error has occurred
+            // handle error notifications
+        } else {
+            this.status = JobStatus.COMPLETED;
+        }
         
+        coordinator.writeLogEntry ( this );
         System.debug ( 'vy_Processor - finish () ');
+        
 	}
 
     global JobStatus getStatus () {

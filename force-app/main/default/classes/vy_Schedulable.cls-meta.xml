@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ApexClass xmlns="urn:metadata.tooling.soap.sforce.com" fqn="vy_WorkFactory">
+<ApexClass xmlns="urn:metadata.tooling.soap.sforce.com" fqn="vy_Schedulable">
     <apiVersion>43.0</apiVersion>
     <status>Active</status>
 </ApexClass>
