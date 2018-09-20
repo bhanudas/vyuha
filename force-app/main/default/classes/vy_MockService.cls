@@ -1,4 +1,4 @@
-@isTest
+
 global class vy_MockService implements System.StubProvider {
 
     private Map < String, Object > params;
@@ -19,7 +19,7 @@ global class vy_MockService implements System.StubProvider {
             }
             if ( stubbedMethodName == 'isValid' ) {
                 system.debug ( 'vy_MockService - vy_Formation - isValid ' + params );
-                return vy_Formation_getSoqlStatement ();
+                return vy_Formation_isValid ();
             }
             if ( stubbedMethodName == 'load' ) {
                 system.debug ( 'vy_MockService - vy_Formation - load ' + params );

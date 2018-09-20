@@ -13,7 +13,7 @@ global with sharing class vy_Processor implements Database.Batchable < sobject >
         // initialize
         this.formation = formation;
         this.coordinator = coordinator;
-        System.debug ( 'vy_Processor - constructor ' + this);
+        vy_Coordinator.debugOutput ( 'vy_Processor::constructor', '', this );
     }
 
     global Database.QueryLocator start ( Database.BatchableContext batchContext ) {
@@ -21,12 +21,18 @@ global with sharing class vy_Processor implements Database.Batchable < sobject >
         this.status = JobStatus.QUERY;
         this.apexJobId = batchContext.getJobId ();
         coordinator.writeLogEntry ( this );
-
-        // run query
-        String soql = this.formation.getSoqlStatement ();
-        System.debug ( 'vy_Processor - start () ' + soql );
-		return Database.getQueryLocator ( soql );
-        
+        if ( this.formation.isValid () == false ) {
+            this.formation.addError ( 'Start', 'Warning, Formation is marked as invalid' );
+        }
+        try {
+            // run query
+            String soql = this.formation.getSoqlStatement ();
+            vy_Coordinator.debugOutput ( 'vy_Processor::start', 'soql query', soql );
+            return Database.getQueryLocator ( soql );
+        } catch ( Exception e ) {
+            this.formation.addError ( 'Start', e.getMessage ());
+            return null;
+        }
 	}
 
 	global void execute ( Database.BatchableContext batchContext, List < sObject > listToProcess ) {
@@ -35,15 +41,15 @@ global with sharing class vy_Processor implements Database.Batchable < sobject >
         coordinator.writeLogEntry ( this );
 
         // execute
-        System.debug ( 'vy_Processor - execute () ');
+        vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'start', this );
         Boolean executeResult = this.formation.executeFlow ( listToProcess );
         if ( executeResult == false ) {
             // terminate
             this.status = JobStatus.ERROR;
-            System.debug ( 'vy_Processor - execute () - TERMINATED');
+            vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'TERMINATED', this );
         } else {
             // success
-            System.debug ( 'vy_Processor - execute () - Iteration complete');
+            vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'Iteration Complete', this );
         }
         coordinator.writeLogEntry ( this );
 	}
@@ -54,12 +60,14 @@ global with sharing class vy_Processor implements Database.Batchable < sobject >
         if ( this.status == JobStatus.ERROR ) {
             // an error has occurred
             // handle error notifications
+            this.formation.addError ( 'Finish', 'Error Detected during processing');
         } else {
             this.status = JobStatus.COMPLETED;
         }
         
         coordinator.writeLogEntry ( this );
-        System.debug ( 'vy_Processor - finish () ');
+        this.formation.complete ();
+        vy_Coordinator.debugOutput ( 'vy_Processor::finish', '', this );
 
         // fetch and run next Formation
         vy_Formation nextFormation = vy_Coordinator.getNextFormation ( this.formation );

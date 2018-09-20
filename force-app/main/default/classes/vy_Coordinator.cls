@@ -28,25 +28,6 @@ global with sharing class vy_Coordinator {
 
     }
 
-    // specialized log entry for a Scheduled job
-    global void writeLogEntryScheduled ( string jobId ) {
-        // check to see if Job ID already exists
-        List < vyuha_log__c > vlList = fetchLogEntry ( jobId );
-        
-        ID existingVl;
-
-        if ( vlList.size () != 0 ) {
-            existingVl = vlList[0].id;
-        }
-
-        vyuha_log__c vl = new vyuha_log__c ();
-        vl.Apex_Job_ID__c = jobId;
-        vl.Status__c = vy_Processor.JobStatus.SCHEDULED.name ();
-        vl.id = existingVl;
-
-        upsert vl;
-    }
-
     private static List < vyuha_log__c > fetchLogEntry ( ID apexJobId ) {
         return new List < vyuha_log__c > ([ SELECT ID, Status__c FROM vyuha_log__c WHERE Apex_Job_ID__c = : apexJobId FOR UPDATE ]);
     }
@@ -76,19 +57,25 @@ global with sharing class vy_Coordinator {
         
         boolean foundCurrent = false;
         for ( Vyuha_Formation__mdt formation : formations ) {
+            nextFormationName = formation.DeveloperName;
             if ( foundCurrent ) {
-                nextFormationName = formation.DeveloperName;
                 break;
             }
             if ( formation.DeveloperName == currentFormation.getName () ) {
                 foundCurrent = true;
+                nextFormationName = '';
             }
         }
 
+        vy_Coordinator.debugOutput ( 'vy_Coordinator::getNextFormation','Next Found', nextFormationName );
         // load the formation and return
         returnFormation.load ( nextFormationName );
         return returnFormation;
 
+    }
+
+    global static void debugOutput ( String classInfo, String Message, Object data ) {
+        System.debug ( '=== ' + classInfo + ' - ' + message + ' [ ' + data + ' ] ');
     }
 
 }

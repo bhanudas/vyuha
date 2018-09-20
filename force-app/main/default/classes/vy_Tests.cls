@@ -28,6 +28,23 @@ public class vy_Tests {
     }
 
     @isTest
+    public static void processor_invalid () {
+        Map < String, Object > params = new Map < String, Object > ();
+        params.put ( 'executeFlowResult', true );
+        params.put ( 'isValid', false );
+
+        vy_Formation mockFormation = (vy_Formation) Test.createStub ( vy_Formation.class, new vy_MockService ( createTestFormation (), params ));
+        vy_Processor processor = new vy_Processor ( mockFormation, new vy_Coordinator ());
+
+        System.debug ( 'Start Test - ' + processor );
+        test.startTest();
+        ID apexJobID = Database.executeBatch( processor );
+        test.stopTest ();
+        System.debug ( 'Stop Test - ' + processor );
+        System.assertEquals( 'COMPLETED', vy_Coordinator.getJobStatus ( apexJobID ));
+    }
+
+    @isTest
     public static void processor_terminate () {
         Map < String, Object > params = new Map < String, Object > ();
         params.put ( 'executeFlowResult', false );
@@ -46,7 +63,18 @@ public class vy_Tests {
      @isTest
     public static void run_integrated_test  () {
         
-        System.debug ( 'Start Test ' );
+        vy_Coordinator.debugOutput ( 'vy_Tests::run_integrated_test', 'Start Test', null );
+
+        // create 50 contacts
+        integer testSize = 50;
+        List < Contact > testContacts = new List < Contact > ();
+        for ( integer i = 0; i < testSize; i++ ) {
+            Contact c = new Contact ();
+            c.lastName = 'oldValue';
+            testContacts.add ( c );
+        }
+
+        insert testContacts;
         
         Test.startTest ();
         vy_CoordinatorFactory cf = new vy_CoordinatorFactory ();
@@ -54,13 +82,13 @@ public class vy_Tests {
 
         Test.stopTest ();
 
-        System.debug ( 'Stop Test - ' + cf );
+        vy_Coordinator.debugOutput ( 'vy_Tests::run_integrated_test', 'Stop Test', cf );
 
-        // query user to find title
-        List < User > users = [ SELECT ID, Title FROM USER ];
+        // query contacts
+        testContacts = [ SELECT ID, LastName FROM Contact ];
 
-        for ( User u : users ) {
-            System.assertEquals ( 'Vyuha', u.title );
+        for ( Contact c : testContacts ) {
+            System.assertEquals ( 'Vyuha', c.LastName );
         }
     }
 }
