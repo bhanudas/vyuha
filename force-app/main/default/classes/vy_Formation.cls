@@ -63,6 +63,7 @@ global with sharing class vy_Formation {
             return Database.executeBatch ( processor, this.batchSize );
         } else {
             // formation is not valid - do nothing
+            return null;
         }
     }
 

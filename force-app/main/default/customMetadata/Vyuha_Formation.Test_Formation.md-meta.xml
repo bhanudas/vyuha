@@ -11,8 +11,44 @@
         <value xsi:type="xsd:double">200.0</value>
     </values>
     <values>
+        <field>Day_1__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Day_2__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Day_3__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Day_4__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Day_5__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Day_6__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Day_7__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Day_of_Month__c</field>
+        <value xsi:type="xsd:string">Not Selected</value>
+    </values>
+    <values>
         <field>Flow_Name__c</field>
-        <value xsi:type="xsd:string">Test Flow</value>
+        <value xsi:type="xsd:string">Vyuha_Test</value>
+    </values>
+    <values>
+        <field>Frequency__c</field>
+        <value xsi:type="xsd:string">Monthly</value>
     </values>
     <values>
         <field>Hour_10__c</field>
@@ -36,7 +72,7 @@
     </values>
     <values>
         <field>Hour_15__c</field>
-        <value xsi:type="xsd:boolean">true</value>
+        <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
         <field>Hour_16__c</field>
@@ -56,11 +92,11 @@
     </values>
     <values>
         <field>Hour_1__c</field>
-        <value xsi:type="xsd:boolean">true</value>
+        <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
         <field>Hour_20__c</field>
-        <value xsi:type="xsd:boolean">false</value>
+        <value xsi:type="xsd:boolean">true</value>
     </values>
     <values>
         <field>Hour_21__c</field>
@@ -84,7 +120,7 @@
     </values>
     <values>
         <field>Hour_4__c</field>
-        <value xsi:type="xsd:boolean">true</value>
+        <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
         <field>Hour_5__c</field>
@@ -107,7 +143,27 @@
         <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
+        <field>Is_Test__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Monthly__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>Order__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
         <field>Soql_Statement__c</field>
-        <value xsi:type="xsd:string">SELECT ID FROM User LIMIT 1</value>
+        <value xsi:type="xsd:string">SELECT ID FROM User</value>
+    </values>
+    <values>
+        <field>Week_of_Month__c</field>
+        <value xsi:type="xsd:string">Last</value>
+    </values>
+    <values>
+        <field>Weekly__c</field>
+        <value xsi:type="xsd:boolean">false</value>
     </values>
 </CustomMetadata>

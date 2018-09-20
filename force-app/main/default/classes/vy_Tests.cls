@@ -8,9 +8,6 @@ public class vy_Tests {
         formation.soqlStatement = 'SELECT ID FROM USER LIMIT 1';
         formation.flowInterviewName = '';
         formation.batchSize = 200;
-        formation.scheduledHours.add ( '22' );
-        formation.scheduledHours.add ( '23' );
-
         return formation;
     }
 
