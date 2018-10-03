@@ -106,6 +106,7 @@ global with sharing class vy_Formation {
             // invoke the associated Flow
             Flow.Interview jobFlow = Flow.Interview.CreateInterview ( this.flowInterviewName, inputMap );
             jobFlow.start ();
+            this.recordsProcessed++;
         }
 
         return true; // return false if execute fails

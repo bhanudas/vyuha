@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <assignments>
+        <name>Update_Last_Name</name>
+        <label>Update Last Name</label>
+        <locationX>141</locationX>
+        <locationY>259</locationY>
+        <assignmentItems>
+            <assignToReference>SelectedContact.LastName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Vyuha</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_Contact</targetReference>
+        </connector>
+    </assignments>
+    <interviewLabel>Vyuha_Contact_Test {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Vyuha_Contact_Test</label>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Look_up_Contact</name>
+        <label>Look up Contact</label>
+        <locationX>123</locationX>
+        <locationY>134</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Update_Last_Name</targetReference>
+        </connector>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>inputID</elementReference>
+            </value>
+        </filters>
+        <object>Contact</object>
+        <outputReference>SelectedContact</outputReference>
+        <queriedFields>Id</queriedFields>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_Contact</name>
+        <label>Update Contact</label>
+        <locationX>158</locationX>
+        <locationY>366</locationY>
+        <inputReference>SelectedContact</inputReference>
+    </recordUpdates>
+    <startElementReference>Look_up_Contact</startElementReference>
+    <variables>
+        <name>inputID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>SelectedContact</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Contact</objectType>
+    </variables>
+</Flow>

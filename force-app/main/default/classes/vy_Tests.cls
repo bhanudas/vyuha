@@ -65,8 +65,8 @@ public class vy_Tests {
         
         vy_Coordinator.debugOutput ( 'vy_Tests::run_integrated_test', 'Start Test', null );
 
-        // create 50 contacts
-        integer testSize = 50;
+        // create 10 contacts
+        integer testSize = 10;
         List < Contact > testContacts = new List < Contact > ();
         for ( integer i = 0; i < testSize; i++ ) {
             Contact c = new Contact ();

@@ -8,7 +8,7 @@
     </values>
     <values>
         <field>Batch_Size__c</field>
-        <value xsi:type="xsd:double">200.0</value>
+        <value xsi:type="xsd:double">10.0</value>
     </values>
     <values>
         <field>Day_1__c</field>
@@ -44,7 +44,7 @@
     </values>
     <values>
         <field>Flow_Name__c</field>
-        <value xsi:type="xsd:string">Vyuha_Test</value>
+        <value xsi:type="xsd:string">Vyuha_Contact_Test</value>
     </values>
     <values>
         <field>Frequency__c</field>
@@ -144,19 +144,23 @@
     </values>
     <values>
         <field>Is_Test__c</field>
-        <value xsi:type="xsd:boolean">false</value>
+        <value xsi:type="xsd:boolean">true</value>
     </values>
     <values>
         <field>Monthly__c</field>
         <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
+        <field>Notification_Email__c</field>
+        <value xsi:type="xsd:string">bhanudas@suryaconnect.com</value>
+    </values>
+    <values>
         <field>Order__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:double">1.0</value>
     </values>
     <values>
         <field>Soql_Statement__c</field>
-        <value xsi:type="xsd:string">SELECT ID FROM User</value>
+        <value xsi:type="xsd:string">SELECT ID FROM Contact</value>
     </values>
     <values>
         <field>Week_of_Month__c</field>
