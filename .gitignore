@@ -5,4 +5,4 @@
 .salesforce
 .settings
 .vscode
-
+mdapi_output_dir/*
