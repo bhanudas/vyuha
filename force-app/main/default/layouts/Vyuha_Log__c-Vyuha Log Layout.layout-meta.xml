@@ -28,7 +28,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Formation_ID__c</field>
+                <field>Vyuha_Formation__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

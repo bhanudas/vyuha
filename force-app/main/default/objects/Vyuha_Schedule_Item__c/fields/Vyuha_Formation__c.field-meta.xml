@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Vyuha_Formation__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <description>Related Vyuha Formation for Scheduled Item</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Related Vyuha Formation for Scheduled Item</inlineHelpText>
+    <label>Vyuha Formation</label>
+    <referenceTo>Vyuha_Formation__c</referenceTo>
+    <relationshipLabel>Vyuha Schedule Items</relationshipLabel>
+    <relationshipName>Vyuha_Schedule_Items</relationshipName>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

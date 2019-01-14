@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recurring_Day_Sunday__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Formation scheduled for recurring runs on Sunday</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Formation scheduled for recurring runs on Sunday</inlineHelpText>
+    <label>Sunday</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
