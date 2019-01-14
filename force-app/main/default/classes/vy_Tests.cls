@@ -2,30 +2,36 @@
 
 public class vy_Tests {
 
-    private static vy_Formation createTestFormation () {
-        vy_Formation formation = new vy_Formation ();
+    @testSetup
+    public static void testSetup () {
+        vyuha_Formation__c formation = new vyuha_Formation__c ();
         formation.name = 'Test Formation';
-        formation.soqlStatement = 'SELECT ID FROM USER LIMIT 1';
-        formation.flowInterviewName = '';
-        formation.batchSize = 200;
-        return formation;
+        formation.Soql_Statement__c = 'SELECT ID FROM USER LIMIT 1';
+        formation.Flow_Interview_Name__c = 'Vyuha_Contact_Test';
+        formation.Flow_Input_Variable_Name__c = 'ID';
+        formation.batch_size__c = 200;
+        insert formation;
+
+        vyuha_Schedule_Item__c scheduleItem = new vyuha_Schedule_Item__c ();
+        scheduleItem.Vyuha_Formation__c = formation.id;
+        scheduleItem.Frequency__c = 'One Time';
+        scheduleItem.Start_Date__c = Date.today ();
+        scheduleItem.Preferred_Start_Time__c = '1:00 AM';
     }
 
     @isTest
-    public static void processor_basic () {
+    public static void scheduleItem_core () {
         Map < String, Object > params = new Map < String, Object > ();
+        params.put ( 'soqlstatement', 'SELECT ID FROM USER LIMIT 1' );
+        params.put ( 'batchSize', 200 );
         params.put ( 'executeFlowResult', true );
 
-        vy_Formation mockFormation = (vy_Formation) Test.createStub ( vy_Formation.class, new vy_MockService ( createTestFormation (), params ));
-        vy_Processor processor = new vy_Processor ( mockFormation, new vy_Coordinator ());
+        vy_Formation mockFormation = (vy_Formation) Test.createStub ( vy_Formation.class, new vy_MockService ( params ));
+        vy_ScheduleItem scheduleItem = new vy_ScheduleItem ( mockFormation, new vy_Coordinator ());
 
-        System.debug ( 'Start Test - ' + processor );
-        test.startTest();
-        ID apexJobID = Database.executeBatch( processor );
-        test.stopTest ();
-        System.debug ( 'Stop Test - ' + processor );
-        System.assertEquals( 'COMPLETED', vy_Coordinator.getJobStatus ( apexJobID ));
+        system.assertEquals ( 200, scheduleItem.formation().getBatchSize ());
     }
+/*
 
     @isTest
     public static void processor_invalid () {
@@ -58,8 +64,8 @@ public class vy_Tests {
         System.debug ( 'Stop Test - ' + processor );
         System.assertEquals( 'ERROR', vy_Coordinator.getJobStatus ( apexJobID ));
     }
-
-
+*/
+/*
      @isTest
     public static void run_integrated_test  () {
         
@@ -91,4 +97,5 @@ public class vy_Tests {
             System.assertEquals ( 'Vyuha', c.LastName );
         }
     }
+*/
 }

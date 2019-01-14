@@ -1,14 +1,26 @@
 // Coordinator
 // Container for control and monitoring
 
-global class vy_Coordinator {
+public class vy_Coordinator {
 
     // base constructor for general Coordinator use
-    global vy_Coordinator () {
-        
+
+    public vy_Coordinator ( ) {
+
     }
 
-    global void writeLogEntry ( vy_Processor processor ) {
+    public List < vy_ScheduleItem > getScheduleItemsToRun ( vy_Scheduler scheduler ) {
+
+        List < vy_ScheduleItem > scheduleItems = new List < vy_ScheduleItem > ();
+        // use the scheduler to determine the time to check
+
+        // query the database for active, non running items
+
+        // return items that are runnable
+        return scheduleItems;
+    }
+
+    public void writeLog ( vy_Processor processor ) {
 
         // check to see if Job ID already exists
         List < vyuha_log__c > vlList = fetchLogEntry ( processor.getApexJobId ());
@@ -32,7 +44,7 @@ global class vy_Coordinator {
         return new List < vyuha_log__c > ([ SELECT ID, Status__c FROM vyuha_log__c WHERE Apex_Job_ID__c = : apexJobId FOR UPDATE ]);
     }
 
-    global static string getJobStatus ( ID apexJobId ) {
+    public static string getJobStatus ( ID apexJobId ) {
         List < vyuha_log__c > vlList = fetchLogEntry ( apexJobId );
 
         if ( vlList.size () != 0 ) {
@@ -41,41 +53,39 @@ global class vy_Coordinator {
             return null;
         }
     }
-/*
-    global static vy_Formation getNextFormation ( vy_Formation currentFormation ) {
 
-        List < Vyuha_Formation__mdt > formations;
-        vy_Formation returnFormation = new vy_Formation ();
-
-        if ( Test.isRunningTest() ) {
-            formations = [ SELECT DeveloperName FROM Vyuha_Formation__mdt WHERE Is_Test__c = TRUE ORDER BY Order__c ];
-        } else {
-            formations = [ SELECT DeveloperName FROM Vyuha_Formation__mdt WHERE Active__c = TRUE AND Is_Test__c = FALSE ORDER BY Order__c ];
-        }
-
-        string nextFormationName = '';
-        
-        boolean foundCurrent = false;
-        for ( Vyuha_Formation__mdt formation : formations ) {
-            nextFormationName = formation.DeveloperName;
-            if ( foundCurrent ) {
-                break;
-            }
-            if ( formation.DeveloperName == currentFormation.getName () ) {
-                foundCurrent = true;
-                nextFormationName = '';
-            }
-        }
-
-        vy_Coordinator.debugOutput ( 'vy_Coordinator::getNextFormation','Next Found', nextFormationName );
-        // load the formation and return
-        returnFormation.load ( nextFormationName );
-        return returnFormation;
-
-    }
-*/
-    global static void debugOutput ( String classInfo, String Message, Object data ) {
+    public static void debugOutput ( String classInfo, String Message, Object data ) {
         System.debug ( '=== ' + classInfo + ' - ' + message + ' [ ' + data + ' ] ');
     }
 
+
+    public void sendNotificationEmail ( vy_Formation formation ) {
+
+        string[] toaddress;
+        if ( formation.getNotificationEmailAddresses () != null ) {
+            toaddress = ( formation.getNotificationEmailAddresses ()).split('[;,\n)]');
+        } else {
+            return;
+        }
+
+        string dateString = System.now().format('EEEE, MMMM d, yyyy hh:mm a');
+
+        string body = '';
+        /*
+        body += 'Job Complete for ' + this.name + ' - ' + dateString + '\n\n';
+        body += 'Total Records Processed ' + this.recordsProcessed + '\n';
+        body += 'Total Errors: ' + this.errorCount + '\n';
+        if ( this.errorCount > 0 ) {
+            body += '==== Errors ===== \n' + this.errorMessage;
+        }
+*/
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        mail.setToAddresses(toaddress);
+        mail.setsubject( 'Salesforce Automated Formation Job Processing Report ' + dateString );
+        mail.setPlainTextBody(body);
+        
+        // send the email.
+        Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+
+		}
 }

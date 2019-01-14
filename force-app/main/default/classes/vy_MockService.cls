@@ -2,11 +2,9 @@
 global class vy_MockService implements System.StubProvider {
 
     private Map < String, Object > params;
-    private vy_Formation formation;
 
-    global vy_MockService ( vy_Formation formation, Map < String, Object > params ) {
+    global vy_MockService ( Map < String, Object > params ) {
         this.params = params;
-        this.formation = formation;
     }
 
     global Object handleMethodCall ( Object stubbedObject, String stubbedMethodName, Type returnType, List < Type > listOfParamTypes, List < String > listOfParamNames, List < Object > listOfArgs ) {
@@ -40,7 +38,7 @@ global class vy_MockService implements System.StubProvider {
 
     // vy_Formation Stubs
     private String vy_Formation_getSoqlStatement () {
-        return formation.getSoqlStatement ();
+        return ( string ) params.get ( 'soqlstatement' );
     }
 
     private Boolean vy_Formation_isValid () {
@@ -56,8 +54,7 @@ global class vy_MockService implements System.StubProvider {
     }
 
     private integer vy_Formation_getBatchSize () {
-        
-        return this.formation.getBatchSize ();
+        return ( integer ) params.get ('batchSize');
     }
 
 }

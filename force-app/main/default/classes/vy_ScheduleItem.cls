@@ -1,41 +1,67 @@
 // vy_ScheduleItem
 // Interface to Scheduled Item
 
-public class vy_ScheduleItem {
+public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
 
     private vy_Formation formation;
     private vy_Coordinator coordinator;
     
     public vy_ScheduleItem ( vy_Formation formation, vy_Coordinator coordinator ) {
+        this.formation = formation;
+        this.coordinator = coordinator;
+    }
+
+    public void load ( Id recordId ) {
+
+        // query for schedule item
+        vyuha_Schedule_Item__c scheduleItem;
+
+        try {
+            scheduleItem = [ SELECT ID, Vyuha_Formation__c FROM vyuha_Schedule_Item__c WHERE ID =: recordId ];
+            this.formation.load ( scheduleItem.Vyuha_Formation__c );
+        } catch ( Exception e ) {
+            throw new vy_Exception ( this, e );
+        }
 
     }
 
-    // isRunning
-    // ----------------------
-    // Indicates if the scheduler is running
+    public boolean isValid () {
+        return this.formation.isValid ();
+    }
+
     public boolean isRunning () {
-        return true;
+        return this.formation.isRunning ();
     }
 
-    // start
-    // -----
-    // Initiates the scheduler
-    public boolean start () {
-        return true;
+    public void start () {
+        this.formation.start ( this );
     }
 
-    // stop
-    // ----
-    // Stops the scheduler - queries all active jobs and removes any future runs
-    public boolean stop () {
-        return true;
+    public void complete () {
+        this.formation.complete ();
     }
 
-    // respawn
-    // -------
-    // Used to create the next job for recurring items
-    public boolean respawn () {
-        //System.schedule('test', '0 47 18 * * ?', new vy_Processor (new vy_Formation (), new ));
-        return true;
+    public string getSoqlStatement () {
+        return this.formation.getSoqlStatement ();
+    }
+
+    public void execute ( List < sObject > dataList ) {
+        this.formation.execute ( dataList );
+    }
+
+    // logging
+
+    public void writeLog ( vy_Processor processor ) {
+        this.formation.writeLog ( processor );
+    }
+
+    public void errorLog ( string errorClass, string errorMessage ) {
+        this.formation.errorLog ( errorClass, errorMessage );
+    }
+
+    // exception
+
+    public string className () {
+        return 'vy_ScheduleItem';
     }
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Flow_API_Name__c</fullName>
-    <description>API Name of Flow to Execute</description>
+    <fullName>Flow_Input_Variable_Name__c</fullName>
+    <description>API Field Name on SOQL Query for input into Flow</description>
     <externalId>false</externalId>
-    <inlineHelpText>API Name of Flow to Execute</inlineHelpText>
-    <label>Flow API Name</label>
+    <inlineHelpText>API Field Name on SOQL Query for input into Flow</inlineHelpText>
+    <label>Flow Input Variable Name</label>
     <length>255</length>
     <required>true</required>
     <trackTrending>false</trackTrending>

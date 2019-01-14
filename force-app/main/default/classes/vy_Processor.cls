@@ -1,85 +1,79 @@
-global class vy_Processor implements Database.Batchable < sobject >, Database.Stateful {
+public class vy_Processor implements Database.Batchable < sobject >, Database.Stateful {
 
-    global enum JobStatus { SCHEDULED, INITIALIZED, QUERY, PROCESSING, COMPLETED, ERROR }
+    public enum JobStatus { SCHEDULED, INITIALIZED, QUERY, PROCESSING, COMPLETED, ERROR }
 
-    private vy_Formation formation;
-    private vy_ScheduleItem scheduleItem;
-    private vy_Coordinator coordinator;
+    private vy_ProcessorItem processorItem;
     private JobStatus status;
     private ID apexJobId;
 
-    global vy_Processor ( vy_Formation formation, vy_Coordinator coordinator ) {
+    public vy_Processor ( vy_processorItem processorItem ) {
         // set control variables
         this.status = JobStatus.INITIALIZED;
         // initialize
-        this.formation = formation;
-        this.coordinator = coordinator;
+        this.processorItem = processorItem;
         vy_Coordinator.debugOutput ( 'vy_Processor::constructor', '', this );
     }
 
-    global Database.QueryLocator start ( Database.BatchableContext batchContext ) {
+    public Database.QueryLocator start ( Database.BatchableContext batchContext ) {
         // set control variables
         this.status = JobStatus.QUERY;
         this.apexJobId = batchContext.getJobId ();
-        coordinator.writeLogEntry ( this );
-        if ( this.formation.isValid () == false ) {
-            this.formation.addError ( 'Start', 'Warning, Formation is marked as invalid' );
+        this.processorItem.writeLog ( this );
+        if ( this.processorItem.isValid () == false ) {
+            this.processorItem.errorLog ( 'Start', 'Warning, Formation is marked as invalid' );
         }
         try {
             // run query
-            String soql = this.formation.getSoqlStatement ();
+            String soql = this.processorItem.getSoqlStatement ();
             vy_Coordinator.debugOutput ( 'vy_Processor::start', 'soql query', soql );
-            return Database.getQueryLocator ( soql );
+            return Database.getQueryLocator( soql );
         } catch ( Exception e ) {
-            this.formation.addError ( 'Start', e.getMessage ());
+            this.processorItem.errorLog ( 'Start', e.getMessage ());
             return null;
         }
 	}
 
-	global void execute ( Database.BatchableContext batchContext, List < sObject > listToProcess ) {
+	public void execute ( Database.BatchableContext batchContext, List < sObject > listToProcess ) {
         // set control variables
         this.status = JobStatus.PROCESSING;
-        coordinator.writeLogEntry ( this );
+        this.processorItem.writeLog ( this );
 
         // execute
         vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'start', this );
-        Boolean executeResult = this.formation.executeFlow ( listToProcess );
-        if ( executeResult == false ) {
-            // terminate
+        try {
+            this.processorItem.execute ( listToProcess );
+            vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'Iteration Complete', this );
+        } catch ( Exception e ) {
+            // handle
             this.status = JobStatus.ERROR;
             vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'TERMINATED', this );
-        } else {
-            // success
-            vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'Iteration Complete', this );
         }
-        coordinator.writeLogEntry ( this );
+        
+        this.processorItem.writeLog ( this );
 	}
 
-	global void finish ( Database.BatchableContext batchContext ) {
+	public void finish ( Database.BatchableContext batchContext ) {
 
         // set status
         if ( this.status == JobStatus.ERROR ) {
             // an error has occurred
             // handle error notifications
-            this.formation.addError ( 'Finish', 'Error Detected during processing');
+            this.processorItem.errorLog ( 'Finish', 'Error Detected during processing');
         } else {
             this.status = JobStatus.COMPLETED;
         }
         
-        coordinator.writeLogEntry ( this );
-        this.formation.complete ();
+        this.processorItem.writeLog ( this );
+        this.processorItem.complete ();
         vy_Coordinator.debugOutput ( 'vy_Processor::finish', '', this );
 
-        // fetch and run next Formation
-        //vy_Formation nextFormation = vy_Coordinator.getNextFormation ( this.formation );
-        //nextFormation.launch ();
 	}
 
-    global JobStatus getStatus () {
+    public JobStatus getStatus () {
         return this.status;
     }
 
-    global ID getApexJobId () {
+    public ID getApexJobId () {
         return this.apexJobId;
     }
 
