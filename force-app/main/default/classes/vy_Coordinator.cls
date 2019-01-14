@@ -41,7 +41,7 @@ global with sharing class vy_Coordinator {
             return null;
         }
     }
-
+/*
     global static vy_Formation getNextFormation ( vy_Formation currentFormation ) {
 
         List < Vyuha_Formation__mdt > formations;
@@ -73,7 +73,7 @@ global with sharing class vy_Coordinator {
         return returnFormation;
 
     }
-
+*/
     global static void debugOutput ( String classInfo, String Message, Object data ) {
         System.debug ( '=== ' + classInfo + ' - ' + message + ' [ ' + data + ' ] ');
     }

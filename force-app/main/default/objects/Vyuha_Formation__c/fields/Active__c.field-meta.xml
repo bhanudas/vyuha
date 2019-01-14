@@ -2,10 +2,10 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Active__c</fullName>
     <defaultValue>false</defaultValue>
-    <description>Indicates if Job is Active</description>
+    <description>Indicates if a Formation is active and runnable</description>
     <externalId>false</externalId>
-    <fieldManageability>DeveloperControlled</fieldManageability>
-    <inlineHelpText>Indicates if Job is Active</inlineHelpText>
+    <inlineHelpText>Indicates if a Formation is active and runnable</inlineHelpText>
     <label>Active</label>
+    <trackTrending>false</trackTrending>
     <type>Checkbox</type>
 </CustomField>

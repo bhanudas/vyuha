@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Notification_Email__c</fullName>
-    <description>Email address for job notifications</description>
+    <description>List of Notification Email addresses (comma delimited)</description>
     <externalId>false</externalId>
-    <fieldManageability>DeveloperControlled</fieldManageability>
-    <inlineHelpText>Email address for job notifications</inlineHelpText>
+    <inlineHelpText>List of Notification Email addresses (comma delimited)</inlineHelpText>
     <label>Notification Email</label>
+    <length>255</length>
     <required>false</required>
-    <type>Email</type>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
     <unique>false</unique>
 </CustomField>

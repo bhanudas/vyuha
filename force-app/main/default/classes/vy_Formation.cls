@@ -8,6 +8,8 @@ global with sharing class vy_Formation {
     global Boolean isValid;
     global Integer batchSize;
     global integer recordsProcessed;
+    global Boolean bulkFlowEnabled;
+    global String flowInputVariableName;
 
     private string notificationEmailAddresses;
     private integer errorCount;
@@ -21,17 +23,21 @@ global with sharing class vy_Formation {
         this.errorCount = 0;
         this.errorMessage = '';
         this.recordsProcessed = 0;
+        //this.flowInputVariableName = '';
+        //this.bulkFlowEnabled = false;
+        this.notificationEmailAddresses = '';
     }
 
     global boolean load ( String formationName ) {
         // read from CMT
         Set < string > fields = new Set < string > ();
         fields.add ( 'DeveloperName' );
-        fields.add ( 'Flow_Name__c' );
+        fields.add ( 'Flow_Interview_Name__c' );
         fields.add ( 'Active__c' );
         fields.add ( 'Batch_Size__c' );
         fields.add ( 'Soql_Statement__c' );
-        fields.add ( 'Notification_Email__c' );
+        fields.add ( 'Notification_Email_Addresses__c' );
+//        fields.add ( 'Flow_Input_Variable_Name__c' );
 
         // build soql statement
         string soql = 'SELECT ';
@@ -39,7 +45,7 @@ global with sharing class vy_Formation {
             soql = soql + fieldName + ',';
         }
         soql = soql.left ( soql.length () - 1 );
-        soql = soql + ' FROM Vyuha_Formation__mdt WHERE Active__c = TRUE AND DeveloperName = \'' + formationName + '\'';
+        soql = soql + ' FROM Vyuha_Formation__c WHERE Active__c = TRUE AND DeveloperName = \'' + formationName + '\'';
 
         if ( Test.isRunningTest() ) {
             // add the Test clause here
@@ -48,7 +54,7 @@ global with sharing class vy_Formation {
             soql = soql + ' AND Is_Test__c = FALSE';
         }
 
-        List < vyuha_formation__mdt > formationRecords = Database.Query ( soql );
+        List < sObject > formationRecords = Database.Query ( soql );
 
         if ( formationRecords.size () == 0 ) {
             return false;
@@ -56,10 +62,13 @@ global with sharing class vy_Formation {
 
         // load values
         this.name = (string) formationRecords[0].get ( 'DeveloperName' );
-        this.flowInterviewName = (string) formationRecords[0].get ( 'Flow_Name__c' );
+        this.flowInterviewName = (string) formationRecords[0].get ( 'Flow_Interview_Name__c' );
         this.batchSize = Integer.valueOf ( (decimal) formationRecords[0].get ( 'Batch_Size__c' ));
         this.soqlStatement = (string) formationRecords[0].get ( 'Soql_Statement__c' );
         this.notificationEmailAddresses = (string) formationRecords[0].get ( 'Notification_Email__c' );
+        //this.flowInputVariableName = (string) formationRecords[0].get ( 'Flow_Input_Variable_Name__c' );
+
+        // TODO validate the formation
         this.isValid = true;
 
         return true;
