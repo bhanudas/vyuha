@@ -1,6 +1,6 @@
-// Interface to Custom Metadata "Formation" information
+// Interface to Formation information
 
-global with sharing class vy_Formation {
+global class vy_Formation {
 
     global String name;
     global String soqlStatement;

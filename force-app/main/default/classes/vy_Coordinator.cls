@@ -1,7 +1,7 @@
 // Coordinator
 // Container for control and monitoring
 
-global with sharing class vy_Coordinator {
+global class vy_Coordinator {
 
     // base constructor for general Coordinator use
     global vy_Coordinator () {

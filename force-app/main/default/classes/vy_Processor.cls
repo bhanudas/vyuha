@@ -1,8 +1,9 @@
-global with sharing class vy_Processor implements Database.Batchable < sobject >, Database.Stateful {
+global class vy_Processor implements Database.Batchable < sobject >, Database.Stateful {
 
     global enum JobStatus { SCHEDULED, INITIALIZED, QUERY, PROCESSING, COMPLETED, ERROR }
 
     private vy_Formation formation;
+    private vy_ScheduleItem scheduleItem;
     private vy_Coordinator coordinator;
     private JobStatus status;
     private ID apexJobId;

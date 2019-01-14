@@ -30,6 +30,10 @@
                 <behavior>Required</behavior>
                 <field>Vyuha_Formation__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Vyuha_Schedule_Item__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
