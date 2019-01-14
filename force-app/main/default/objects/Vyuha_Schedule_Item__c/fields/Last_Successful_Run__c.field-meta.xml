@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Last_Successful_Run__c</fullName>
+    <description>Date/Time of most recent successful run</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Date/Time of most recent successful run</inlineHelpText>
+    <label>Last Successful Run</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

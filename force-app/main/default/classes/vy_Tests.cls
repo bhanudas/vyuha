@@ -15,10 +15,10 @@ public class vy_Tests {
         vyuha_Schedule_Item__c scheduleItem = new vyuha_Schedule_Item__c ();
         scheduleItem.Vyuha_Formation__c = formation.id;
         scheduleItem.Frequency__c = 'One Time';
-        scheduleItem.Start_Date__c = Date.today ();
+        scheduleItem.One_Time_Datetime__c = Datetime.Now ();
         scheduleItem.Preferred_Start_Time__c = '1:00 AM';
     }
-
+/*
     @isTest
     public static void scheduleItem_core () {
         Map < String, Object > params = new Map < String, Object > ();
@@ -31,6 +31,7 @@ public class vy_Tests {
 
         system.assertEquals ( 200, scheduleItem.formation().getBatchSize ());
     }
+    */
 /*
 
     @isTest

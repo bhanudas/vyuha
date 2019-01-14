@@ -1,4 +1,6 @@
 // Class to be scheduled and runs a Schedule Item via Apex Job Scheduler
+// This class should be scheduled to run at whatever interval necessary (hourly)
+// Note: Scheduled jobs are set to the TZ of the user that started the job
 
 public class vy_Scheduler implements System.Schedulable, vy_ExceptionParent {
     
@@ -16,8 +18,6 @@ public class vy_Scheduler implements System.Schedulable, vy_ExceptionParent {
             for ( vy_ScheduleItem item : scheduleItems ) {
                 item.start ();
             }
-
-            // reschedule job for next hour
 
         } catch ( Exception e ) {
             throw new vy_Exception ( this, e );

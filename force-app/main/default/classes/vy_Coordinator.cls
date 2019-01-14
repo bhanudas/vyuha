@@ -13,8 +13,21 @@ public class vy_Coordinator {
 
         List < vy_ScheduleItem > scheduleItems = new List < vy_ScheduleItem > ();
         // use the scheduler to determine the time to check
+        Datetime rightNow = Datetime.now ();
 
         // query the database for active, non running items
+        List < Vyuha_Schedule_Item__c > sObjectItems = new List < Vyuha_Schedule_Item__c > ();
+        string query = vy_ScheduleItem.baseSelectQuery ();
+        query += ' WHERE Frequency__c = \'One Time\' AND Vyuha_Formation__r.Active__c = TRUE AND One_Time_Datetime__c <= ' + String.valueOf ( rightNow ) + ' AND Last_Successful_Run__c < One_Time_Datetime__c';
+        sObjectItems = Database.query ( query );
+        
+        // get recurrings
+
+        // transform into SI Objects
+        for ( Vyuha_Schedule_Item__c si : sObjectItems ) {
+            vy_ScheduleItem sItem = new vy_ScheduleItem ( si );
+            scheduleItems.add ( sItem );
+        }
 
         // return items that are runnable
         return scheduleItems;

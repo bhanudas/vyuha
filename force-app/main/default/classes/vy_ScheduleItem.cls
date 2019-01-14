@@ -11,6 +11,10 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
         this.coordinator = coordinator;
     }
 
+    public vy_ScheduleItem ( Vyuha_Schedule_Item__c siRecord ) {
+        // turn the record into a actual si object
+    }
+
     public void load ( Id recordId ) {
 
         // query for schedule item
@@ -22,7 +26,6 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
         } catch ( Exception e ) {
             throw new vy_Exception ( this, e );
         }
-
     }
 
     public boolean isValid () {
@@ -63,5 +66,21 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
 
     public string className () {
         return 'vy_ScheduleItem';
+    }
+
+    public static string baseSelectQuery () {
+        string soql = '';
+        List < string > fields = new List < string > ();
+        fields.add ( 'ID' );
+        fields.add ( 'Frequency__c' );
+        fields.add ( 'Last_Successful_Run__c' );
+        fields.add ( 'Last_Error_Encountered__c' );
+        fields.add ( 'One_Time_Datetime__c' );
+        fields.add ( 'Vyuha_Formation__r.Active__c' );
+        fields.add ( 'Vyuha_Formation__c' );
+        fields.add ( 'Vyuha_Formation__r.Name' );
+        soql += 'SELECT ' + String.join ( fields, ',' );
+        soql += ' FROM vyuha_Schedule_Item__c';
+        return soql;
     }
 }
