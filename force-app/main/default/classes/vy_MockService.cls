@@ -33,6 +33,13 @@ global class vy_MockService implements System.StubProvider {
             }
         }
 
+        if ( stubbedObject instanceof vy_Scheduler ) {
+            if ( stubbedMethodName == 'now' ) {
+                system.debug ( 'vy_MockService - vy_Scheduler - now ' + params );
+                return vy_Scheduler_Now ();
+            }
+        }
+
         return null;
     }
 
@@ -55,6 +62,11 @@ global class vy_MockService implements System.StubProvider {
 
     private integer vy_Formation_getBatchSize () {
         return ( integer ) params.get ('batchSize');
+    }
+
+    // vy_Scheduler Stubs
+    private Datetime vy_Scheduler_Now () {
+        return (DateTime) params.get ( 'now' );
     }
 
 }

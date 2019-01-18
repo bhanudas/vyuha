@@ -29,4 +29,8 @@ public class vy_Scheduler implements System.Schedulable, vy_ExceptionParent {
         return 'vy_Scheduler';
     }
 
+    public Datetime now () {
+        return Datetime.now ();
+    }
+
 }
