@@ -34,6 +34,10 @@
                 <behavior>Required</behavior>
                 <field>Flow_Input_Variable_Name__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>Status__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

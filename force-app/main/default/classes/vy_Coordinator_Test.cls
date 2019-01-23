@@ -37,4 +37,38 @@ public class vy_Coordinator_Test {
 
         system.assertEquals ( 1, scheduleItems.size ());
     }
+
+    @isTest
+    public static void getScheduleItemsToRun_OneTime_TooEarly () {
+        Map < String, Object > params = new Map < String, Object > ();
+        params.put ( 'now', Datetime.newInstance ( 2018, 09, 20, 13, 00, 00 ));
+
+        vy_Scheduler mockScheduler = (vy_Scheduler) Test.createStub ( vy_Scheduler.class, new vy_MockService ( params ));
+
+        Test.startTest ();
+
+        vy_Coordinator coordinator = new vy_Coordinator ();
+        List < vy_ScheduleItem > scheduleItems = coordinator.getScheduleItemsToRun ( mockScheduler );
+
+        Test.stopTest ();
+
+        system.assertEquals ( 0, scheduleItems.size ());
+    }
+
+    @isTest
+    public static void getScheduleItemsToRun_OneTime_LateRun () {
+        Map < String, Object > params = new Map < String, Object > ();
+        params.put ( 'now', Datetime.newInstance ( 2018, 09, 20, 14, 30, 00 ));
+
+        vy_Scheduler mockScheduler = (vy_Scheduler) Test.createStub ( vy_Scheduler.class, new vy_MockService ( params ));
+
+        Test.startTest ();
+
+        vy_Coordinator coordinator = new vy_Coordinator ();
+        List < vy_ScheduleItem > scheduleItems = coordinator.getScheduleItemsToRun ( mockScheduler );
+
+        Test.stopTest ();
+
+        system.assertEquals ( 1, scheduleItems.size ());
+    }
 }
