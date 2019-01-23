@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Status__c</fullName>
-    <description>Indicates Status of Formation</description>
+    <description>Formation Status</description>
     <externalId>false</externalId>
-    <inlineHelpText>Indicates Status of Formation</inlineHelpText>
+    <inlineHelpText>Formation Status</inlineHelpText>
     <label>Status</label>
+    <length>255</length>
     <required>true</required>
     <trackTrending>false</trackTrending>
-    <type>Picklist</type>
-    <valueSet>
-        <restricted>true</restricted>
-        <valueSetName>Vyuha_Status</valueSetName>
-    </valueSet>
+    <type>Text</type>
+    <unique>false</unique>
 </CustomField>

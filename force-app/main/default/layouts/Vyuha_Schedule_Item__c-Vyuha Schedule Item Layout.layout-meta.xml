@@ -75,8 +75,12 @@
                 <field>Active__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Required</behavior>
                 <field>Status__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Formation_Status__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

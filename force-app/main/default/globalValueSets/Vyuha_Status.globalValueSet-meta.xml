@@ -6,9 +6,9 @@
         <label>Stopped</label>
     </customValue>
     <customValue>
-        <fullName>Sleep</fullName>
+        <fullName>Sleeping</fullName>
         <default>false</default>
-        <label>Sleep</label>
+        <label>Sleeping</label>
     </customValue>
     <customValue>
         <fullName>Running</fullName>
