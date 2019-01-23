@@ -5,10 +5,6 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>vy_CoordinatorFactory</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>vy_Formation</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -62,7 +58,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Vyuha_Schedule_Item__c.End_Date__c</field>
+        <field>Vyuha_Schedule_Item__c.Recurring_End_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -107,7 +103,7 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Vyuha_Schedule_Item__c.Start_Date__c</field>
+        <field>Vyuha_Schedule_Item__c.Recurring_Start_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>

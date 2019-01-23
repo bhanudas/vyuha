@@ -54,12 +54,12 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
             } 
 
             // load values
-            this.name = (string) formationRecords[0].get ( 'Id' );
-            this.flowInterviewName = (string) formationRecords[0].get ( 'Flow_Interview_Name__c' );
-            this.batchSize = Integer.valueOf ( (decimal) formationRecords[0].get ( 'Batch_Size__c' ));
-            this.soqlStatement = (string) formationRecords[0].get ( 'Soql_Statement__c' );
-            this.notificationEmailAddresses = (string) formationRecords[0].get ( 'Notification_Email__c' );
-            this.flowInputVariableName = (string) formationRecords[0].get ( 'Flow_Input_Variable_Name__c' );
+            this.name                           = (string) formationRecords[0].get ( 'Id' );
+            this.flowInterviewName              = (string) formationRecords[0].get ( 'Flow_Interview_Name__c' );
+            this.batchSize                      = Integer.valueOf ( (decimal) formationRecords[0].get ( 'Batch_Size__c' ));
+            this.soqlStatement                  = (string) formationRecords[0].get ( 'Soql_Statement__c' );
+            this.notificationEmailAddresses     = (string) formationRecords[0].get ( 'Notification_Email__c' );
+            this.flowInputVariableName          = (string) formationRecords[0].get ( 'Flow_Input_Variable_Name__c' );
 
             // TODO validate the formation
             this.isValid = true;
