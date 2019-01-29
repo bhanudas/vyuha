@@ -49,6 +49,10 @@ public class vy_Coordinator implements vy_ExceptionParent {
         return scheduleItems;
     }
 
+    public void processEvent ( vy_Event event ) {
+        // handle the event
+    }
+
     public void writeLog ( vy_Processor processor ) {
 
         // check to see if Job ID already exists
