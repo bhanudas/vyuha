@@ -15,10 +15,9 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
     private string errorMessage;
     private ID id;
 
-    private vy_Coordinator coordinator;
     private vy_ScheduleItem scheduleItem;
 
-    public vy_Formation ( vy_Coordinator coordinator ) {
+    public vy_Formation ( ) {
         this.soqlStatement = '';
         this.flowInterviewName = '';
         this.isValid = false;
@@ -28,10 +27,9 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
         this.recordsProcessed = 0;
         this.flowInputVariableName = '';
         this.notificationEmailAddresses = '';
-        this.coordinator = coordinator;
     }
 
-    public void load ( Id recordId ) {
+    public void load ( String recordId ) {
 
         try {
             // read from CMT
@@ -144,7 +142,7 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
 
     public void complete () {
         // send email notifications
-        coordinator.sendNotificationEmail ( this );
+        //coordinator.sendNotificationEmail ( this );
 
     }
 

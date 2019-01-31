@@ -33,7 +33,7 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
         this.formationStatus        = (string)      siRecord.get ( 'Formation_Status__c'        );
 
         this.coordinator = new vy_Coordinator ();
-        this.formation = new vy_Formation ( this.coordinator );
+        this.formation = new vy_Formation ();
 
         if ( executionDateTime != null ) {
             // have a executionDateTime to calculate issRunnable

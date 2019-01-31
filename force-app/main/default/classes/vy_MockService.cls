@@ -69,4 +69,17 @@ global class vy_MockService implements System.StubProvider {
         return (DateTime) params.get ( 'now' );
     }
 
+    // public static mock object generators
+    public static vy_Formation generateFormation () {
+        Map < String, Object > params = new Map < String, Object > ();
+        params.put ( 'soqlstatement', 'SELECT ID FROM USER LIMIT 1' );
+        params.put ( 'batchSize', 200 );
+        params.put ( 'executeFlowResult', true );
+        params.put ( 'loadResult', true );
+        params.put ( 'isValid', true );
+
+        vy_Formation mockFormation = (vy_Formation) Test.createStub ( vy_Formation.class, new vy_MockService ( params ));
+        return mockFormation;
+    }
+
 }

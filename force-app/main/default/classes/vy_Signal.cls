@@ -13,6 +13,7 @@ public class vy_Signal implements vy_ExceptionParent {
 
     private Vyuha_Action vAction;
     private Vyuha_Status vStatus;
+    private vy_Formation formation;
 
     public enum Vyuha_Action { START, STOP }
     public enum Vyuha_Status { SLEEP, RUNNING, ERROR, INACTIVE }
@@ -29,6 +30,23 @@ public class vy_Signal implements vy_ExceptionParent {
         // set the private Action and Status enums
         this.actionToEnum ();
         this.statusToEnum ();
+    }
+
+    // initialize for use with a formation
+    public void initialize ( vy_Formation formation ) {
+        this.formation = formation;
+        this.initialize ();
+        // load the formation information
+        this.formation.load ( this.formationId );
+        this.isValid = this.formation.isValid ();
+    }
+
+    // process the signal
+    public void process () {
+        // deal with actions
+        if ( this.vAction == Vyuha_Action.START ) {
+            
+        }
     }
 
     // writes a new signal to the Platform Event queue
