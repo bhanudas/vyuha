@@ -33,10 +33,10 @@ global class vy_MockService implements System.StubProvider {
             }
         }
 
-        if ( stubbedObject instanceof vy_Scheduler ) {
+        if ( stubbedObject instanceof vy_TimeHelper ) {
             if ( stubbedMethodName == 'now' ) {
-                system.debug ( 'vy_MockService - vy_Scheduler - now ' + params );
-                return vy_Scheduler_Now ();
+                system.debug ( 'vy_MockService - vy_TimeHelper - now ' + params );
+                return vy_TimeHelper_Now ();
             }
         }
 
@@ -65,7 +65,7 @@ global class vy_MockService implements System.StubProvider {
     }
 
     // vy_Scheduler Stubs
-    private Datetime vy_Scheduler_Now () {
+    private Datetime vy_TimeHelper_Now () {
         return (DateTime) params.get ( 'now' );
     }
 

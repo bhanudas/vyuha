@@ -4,15 +4,16 @@
 
 public class vy_Scheduler implements System.Schedulable, vy_ExceptionParent {
     
-    public vy_Scheduler ( ) {
+    private vy_TimeHelper timeHelper;
 
+    public vy_Scheduler ( vy_TimeHelper timeHelper ) {
+        this.timeHelper = timeHelper;
     }
 
     public void execute ( System.SchedulableContext scheduleableContext ) {
         try {
             // check for any runnable items
-            vy_Coordinator coordinator = new vy_Coordinator ();
-            List < vy_ScheduleItem > scheduleItems = coordinator.getScheduleItemsToRun ( this );
+            List < vy_ScheduleItem > scheduleItems = this.getScheduleItemsToRun ();
 
             // start runnable items
             for ( vy_ScheduleItem item : scheduleItems ) {
@@ -29,8 +30,45 @@ public class vy_Scheduler implements System.Schedulable, vy_ExceptionParent {
         return 'vy_Scheduler';
     }
 
-    public Datetime now () {
-        return Datetime.now ();
+    @testVisible
+    private List < vy_ScheduleItem > getScheduleItemsToRun () {
+
+        List < vy_ScheduleItem > scheduleItems = new List < vy_ScheduleItem > ();
+        try {
+            // use the scheduler to determine the time to check
+            Datetime currentDateTime = this.timeHelper.now ();
+
+            // query the database for active, non running items
+            List < Vyuha_Schedule_Item__c > sObjectItems = new List < Vyuha_Schedule_Item__c > ();
+            string query = vy_ScheduleItem.baseSelectQuery ();
+            vy_Coordinator.debugOutput ('vy_Coordinator::getScheduleItemsToRun', 'soql query', query );
+            sObjectItems = Database.query ( query );
+            vy_Coordinator.debugOutput ('vy_Coordinator::getScheduleItemsToRun', 'returned items', sObjectItems );
+            // get recurrings
+
+            // transform into SI Objects
+            for ( Vyuha_Schedule_Item__c si : sObjectItems ) {
+                vy_ScheduleItem sItem = new vy_ScheduleItem ( si, currentDateTime );
+                scheduleItems.add ( sItem );
+            }
+
+            // remove all items are are not runnable
+            
+            for ( integer idx = scheduleItems.size () - 1; idx >= 0; idx-- ) {
+                if ( scheduleItems [ idx ].isRunnable () == FALSE ) {
+                    scheduleItems.remove ( idx );
+                }
+            }
+        } catch ( vy_Exception e ) {
+            // if vy_exception found, return empty list
+            return new List < vy_ScheduleItem > ();
+        } catch ( exception e ) {
+            // generic exception catch
+            throw new vy_Exception ((vy_ExceptionParent) this, e );
+        }
+        
+        // return items that are runnable
+        return scheduleItems;
     }
 
 }
