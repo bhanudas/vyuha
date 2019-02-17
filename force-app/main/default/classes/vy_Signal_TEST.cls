@@ -67,12 +67,11 @@ private class vy_Signal_TEST {
     static void basic_put () {
         vy_Signal sig = new vy_Signal ();
         sig.formationId = '123';
-        sig.action = 'START';
+        sig.status = 'TEST';
         sig.initialize ();
 
         Test.startTest ();
-        boolean success = sig.put ();
-        system.assertEquals ( true, success );
+        sig.put ();
         Test.stopTest ();        
     }
 }

@@ -66,21 +66,8 @@ public class vy_Signal implements vy_ExceptionParent {
     }
 
     // writes a new signal to the Platform Event queue
-    public boolean put () {
-        String jsonStr = JSON.serialize( this );
-        Vyuha_Event__e event = new Vyuha_Event__e ();
-        event.data__c = jsonStr;
-        event.Apex_Job_ID__c = this.apexJobId;
-        event.Formation_ID__c = this.formationId;
-        event.Schedule_Item_ID__c = this.scheduleItemId;
-        event.Status__c = this.status;
-        Database.SaveResult sr = EventBus.publish ( event );
-        if ( sr.isSuccess () == false ) {
-            // handle exception
-            throw new vy_Exception ( this, 'put failed' );
-        } else {
-            return true;
-        }
+    public void put () {
+        vy_EventHandler.create ( this );
     }
 
     // converts local action as string into enum
