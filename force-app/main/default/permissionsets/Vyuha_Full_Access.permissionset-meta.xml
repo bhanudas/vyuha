@@ -89,7 +89,17 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Vyuha_Log__c.Message__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Vyuha_Log__c.Status__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Vyuha_Log__c.Vyuha_Schedule_Item__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

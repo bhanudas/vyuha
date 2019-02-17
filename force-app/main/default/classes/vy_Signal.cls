@@ -224,7 +224,9 @@ public class vy_Signal implements vy_ExceptionParent {
         vl.Apex_Job_ID__c = this.apexJobId;
         vl.Status__c = this.status;
         vl.id = existingVl;
-
+        vl.message__c = this.message;
+        vl.Vyuha_Formation__c = this.formationId;
+        vl.Vyuha_Schedule_Item__c = this.scheduleItemId;
         upsert vl;
 
     }
