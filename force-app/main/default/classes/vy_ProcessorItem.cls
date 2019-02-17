@@ -17,8 +17,7 @@ public interface vy_ProcessorItem {
     // status methods
     void setStatus ( vy_Signal.Vyuha_Status status );
 
-    // logging and control
-    void writeLog ( vy_Processor processor );
-    void errorLog ( string errorClass, string errorMessage );
-
+    // data access methods
+    string getId ();
+    string getType ();
 }

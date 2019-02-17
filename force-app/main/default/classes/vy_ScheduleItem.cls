@@ -153,14 +153,13 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
         
     }
 
-    // logging
-
-    public void writeLog ( vy_Processor processor ) {
-        this.formation.writeLog ( processor );
+    // data access
+    public string getId () {
+        return id;
     }
 
-    public void errorLog ( string errorClass, string errorMessage ) {
-        this.formation.errorLog ( errorClass, errorMessage );
+    public string getType () {
+        return 'SCHEDULEITEM';
     }
 
     // exception

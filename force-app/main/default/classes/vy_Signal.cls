@@ -13,6 +13,8 @@ public class vy_Signal implements vy_ExceptionParent {
 
     public String formationId;
     public String scheduleItemId;
+    public String id;
+    public String processorType;
     public String apexJobId;
     public String action;
     public String status;
@@ -26,16 +28,58 @@ public class vy_Signal implements vy_ExceptionParent {
     private vy_ProcessorItem processorItem;
 
     public enum Vyuha_Action { START, STOP }
-    public enum Vyuha_Status { SLEEP, STARTING, ITERATION, STOPPING, ERROR, INACTIVE }
+    public enum Vyuha_Status { SLEEPING, STARTING, ITERATION, STOPPING, ERROR, COMPLETE, INACTIVE }
     public enum Signal_Type { ACTION, STATUS }
 
     public vy_Signal () {
 
     }
 
+    public vy_Signal ( vy_Processor processor, Vyuha_Status status, String message ) {
+        this.processorItem = processor.getProcessorItem ();
+        this.processorType = this.processorItem.getType ();
+        this.id = this.processorItem.getId ();
+        this.status = status.name ();
+        this.apexJobId = processor.getApexJobId ();
+        this.message = message;
+    }
+
+    public vy_Signal ( vy_Formation formation, Vyuha_Status status, String message ) {
+        this.processorType = formation.getType ();
+        this.id = formation.getId ();
+        this.status = status.name ();
+        this.message = message;
+    }
+
+    public static void create ( vy_Processor processor, Vyuha_Status status, String message ) {
+        vy_Signal signal = new vy_Signal ( processor, status, message );
+        signal.initialize ();
+        if ( signal.isValid ()) {
+            signal.put ();
+        } else {
+            throw new vy_Exception ( signal, 'Error in create from Processor' );
+        }
+    }
+
+    public static void create ( vy_Formation formation, Vyuha_Status status, String message ) {
+        vy_Signal signal = new vy_Signal ( formation, status, message );
+        signal.initialize ();
+        if ( signal.isValid ()) {
+            signal.put ();
+        } else {
+            throw new vy_Exception ( signal, 'Error in create from Formation' );
+        }
+    }
+
     // takes public attributes and initializes the object
     // for use when instatiating via JSON serialize
     public void initialize () {
+        // set correct id
+        if ( this.processorType == 'FORMATION' ) {
+            this.formationId = this.id;
+        } else if ( this.processorType == 'SCHEDULEITEM' ) {
+            this.scheduleItemId = this.id;
+        }
         // check for formationId or scheduleItem null
         if ( this.formationId == '' ) {
             this.formationId = null;

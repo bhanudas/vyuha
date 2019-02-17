@@ -21,9 +21,9 @@ public class vy_Processor implements Database.Batchable < sobject >, Database.St
         // set control variables
         this.status = JobStatus.QUERY;
         this.apexJobId = batchContext.getJobId ();
-        this.processorItem.writeLog ( this );
+        vy_Signal.create ( this, vy_Signal.Vyuha_Status.STARTING, '' );
         if ( this.processorItem.isValid () == false ) {
-            this.processorItem.errorLog ( 'Start', 'Warning, Formation is marked as invalid' );
+            vy_Signal.create ( this, vy_Signal.Vyuha_Status.ERROR, 'Warning, Formation is marked as invalid' );
         }
         try {
             // run query
@@ -31,7 +31,7 @@ public class vy_Processor implements Database.Batchable < sobject >, Database.St
             vy_Signal.debugOutput ( 'vy_Processor::start', 'soql query', soql );
             return Database.getQueryLocator( soql );
         } catch ( Exception e ) {
-            this.processorItem.errorLog ( 'Start', e.getMessage ());
+            vy_Signal.create ( this, vy_Signal.Vyuha_Status.ERROR, e.getMessage () );
             return null;
         }
 	}
@@ -39,7 +39,7 @@ public class vy_Processor implements Database.Batchable < sobject >, Database.St
 	public void execute ( Database.BatchableContext batchContext, List < sObject > listToProcess ) {
         // set control variables
         this.status = JobStatus.PROCESSING;
-        this.processorItem.writeLog ( this );
+        vy_Signal.create ( this, vy_Signal.Vyuha_Status.ITERATION, '' );
 
         // execute
         vy_Signal.debugOutput ( 'vy_Processor::execute', 'start', this );
@@ -52,7 +52,6 @@ public class vy_Processor implements Database.Batchable < sobject >, Database.St
             vy_Signal.debugOutput ( 'vy_Processor::execute', 'TERMINATED', this );
         }
         
-        this.processorItem.writeLog ( this );
 	}
 
 	public void finish ( Database.BatchableContext batchContext ) {
@@ -61,12 +60,12 @@ public class vy_Processor implements Database.Batchable < sobject >, Database.St
         if ( this.status == JobStatus.ERROR ) {
             // an error has occurred
             // handle error notifications
-            this.processorItem.errorLog ( 'Finish', 'Error Detected during processing');
+            vy_Signal.create ( this, vy_Signal.Vyuha_Status.ERROR, 'Job completed with errors' );
         } else {
             this.status = JobStatus.COMPLETED;
         }
         
-        this.processorItem.writeLog ( this );
+        vy_Signal.create ( this, vy_Signal.Vyuha_Status.COMPLETE, '' );
         this.processorItem.complete ();
         vy_Signal.debugOutput ( 'vy_Processor::finish', '', this );
 
@@ -78,6 +77,9 @@ public class vy_Processor implements Database.Batchable < sobject >, Database.St
 
     public ID getApexJobId () {
         return this.apexJobId;
+    }
+    public vy_ProcessorItem getProcessorItem () {
+        return this.processorItem;
     }
 
 }

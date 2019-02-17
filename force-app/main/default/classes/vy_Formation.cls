@@ -151,6 +151,7 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
     public void complete () {
         // send email notifications
         //coordinator.sendNotificationEmail ( this );
+        vy_Signal.create ( this, vy_Signal.Vyuha_Status.SLEEPING, '' );
 
     }
 
@@ -159,13 +160,13 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
         
     }
 
-    // logging
-    public void writeLog ( vy_Processor processor ) {
-        // implement
+    // data access
+    public string getId () {
+        return id;
     }
 
-    public void errorLog ( string errorClass, string errorMessage ) {
-        // implement
+    public string getType () {
+        return 'FORMATION';
     }
 
     // exception
