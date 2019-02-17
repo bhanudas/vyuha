@@ -4,7 +4,6 @@
 public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
 
     private vy_Formation    formation;
-    private vy_Coordinator  coordinator;
 
     private boolean         isActive;
     private Datetime        oneTimeDateTime;
