@@ -70,7 +70,7 @@ public class vy_Tests {
      @isTest
     public static void run_integrated_test  () {
         
-        vy_Coordinator.debugOutput ( 'vy_Tests::run_integrated_test', 'Start Test', null );
+        vy_Signal.debugOutput ( 'vy_Tests::run_integrated_test', 'Start Test', null );
 
         // create 10 contacts
         integer testSize = 10;
@@ -89,7 +89,7 @@ public class vy_Tests {
 
         Test.stopTest ();
 
-        vy_Coordinator.debugOutput ( 'vy_Tests::run_integrated_test', 'Stop Test', cf );
+        vy_Signal.debugOutput ( 'vy_Tests::run_integrated_test', 'Stop Test', cf );
 
         // query contacts
         testContacts = [ SELECT ID, LastName FROM Contact ];

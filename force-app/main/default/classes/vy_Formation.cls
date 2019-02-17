@@ -71,8 +71,8 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
     // check APEX Jobs to see if this is running
     public boolean isRunning () {
         string currentStatus = this.getStatus ();
-        vy_Coordinator.debugOutput ('vy_Formation::isRunning', 'formation', this );
-        vy_Coordinator.debugOutput ('vy_Formation::isRunning', 'current status', currentStatus );
+        vy_Signal.debugOutput ('vy_Formation::isRunning', 'formation', this );
+        vy_Signal.debugOutput ('vy_Formation::isRunning', 'current status', currentStatus );
         if ( currentStatus == 'Running' ) {
             return true;
         } else {
@@ -117,8 +117,8 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
                 // convert the IDs into a Map structure for input into flow
                 Map < String, String > inputMap = new Map < String, String > ();
                 inputMap.put ( 'inputID', inputId );
-                vy_Coordinator.debugOutput ( 'vy_Formation::executeFlow', 'inputMap', inputMap );
-                vy_Coordinator.debugOutput ( 'vy_Formation::executeFlow', 'Flow', this.flowInterviewName );
+                vy_Signal.debugOutput ( 'vy_Formation::executeFlow', 'inputMap', inputMap );
+                vy_Signal.debugOutput ( 'vy_Formation::executeFlow', 'Flow', this.flowInterviewName );
                 // invoke the associated Flow
                 Flow.Interview jobFlow = Flow.Interview.CreateInterview ( this.flowInterviewName, inputMap );
                 jobFlow.start ();

@@ -19,7 +19,7 @@ public class vy_Exception extends Exception {
     }
 
     private void notify () {
-        vy_Coordinator.debugOutput ('vy_Exception', 'this', this );
+        vy_Signal.debugOutput ('vy_Exception', 'this', this );
     }
 
     // TODO - better exception handling and get rid of the "className" thing

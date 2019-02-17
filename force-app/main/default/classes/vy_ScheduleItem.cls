@@ -77,17 +77,17 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
     }
 
     private boolean calculateRunnable ( Datetime executionDatetime ) {
-        vy_Coordinator.debugOutput ( 'vy_ScheduleItem::isRunnable', 'executeDatetime', executionDatetime );
-        vy_Coordinator.debugOutput ( 'vy_ScheduleItem::isRunnable', 'object values', this );
+        vy_Signal.debugOutput ( 'vy_ScheduleItem::isRunnable', 'executeDatetime', executionDatetime );
+        vy_Signal.debugOutput ( 'vy_ScheduleItem::isRunnable', 'object values', this );
         // check for active
         if ( this.isActive == false ) {
-            vy_Coordinator.debugOutput ( 'vy_ScheduleItem::isRunnable', 'Caught isActive = false', false );
+            vy_Signal.debugOutput ( 'vy_ScheduleItem::isRunnable', 'Caught isActive = false', false );
             return false;
         }
 
         // check for running
         if ( this.isRunning () == true ) {
-            vy_Coordinator.debugOutput ( 'vy_ScheduleItem::isRunnable', 'Caught isRunning = true', false );
+            vy_Signal.debugOutput ( 'vy_ScheduleItem::isRunnable', 'Caught isRunning = true', false );
             return false;
         }
 
@@ -96,26 +96,26 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
             // check for date > execution date
             if ( this.oneTimeDateTime > executionDateTime ) {
                 // scheduled to run in the future
-                vy_Coordinator.debugOutput ( 'vy_ScheduleItem::isRunnable', 'one-time job scheduled to run in the future', false );
+                vy_Signal.debugOutput ( 'vy_ScheduleItem::isRunnable', 'one-time job scheduled to run in the future', false );
                 return false;
             } else {
                  // date is in the past or now, check to make sure that it hasn't run
                 if (( this.lastSuccessfulRun == null ) && ( this.lastErrorEncountered == null )) {
-                    vy_Coordinator.debugOutput ( 'vy_ScheduleItem::isRunnable', 'one-time job found now or in the past, never run', true );
+                    vy_Signal.debugOutput ( 'vy_ScheduleItem::isRunnable', 'one-time job found now or in the past, never run', true );
                     return true;
                 } else {
-                    vy_Coordinator.debugOutput ( 'vy_ScheduleItem::isRunnable', 'one-time job found now or in the past, already run once', false );
+                    vy_Signal.debugOutput ( 'vy_ScheduleItem::isRunnable', 'one-time job found now or in the past, already run once', false );
                     return false;
                 }
             }
         } else if ( this.frequency == 'Recurring' ) {
             // check for running recurring
-            vy_Coordinator.debugOutput ( 'vy_ScheduleItem::isRunnable', 'Recurring not implemented', false );
+            vy_Signal.debugOutput ( 'vy_ScheduleItem::isRunnable', 'Recurring not implemented', false );
             return false;
         }
 
         // catch all
-        vy_Coordinator.debugOutput ( 'vy_ScheduleItem::isRunnable', 'Catch all', false );
+        vy_Signal.debugOutput ( 'vy_ScheduleItem::isRunnable', 'Catch all', false );
         throw new vy_Exception ((vy_ExceptionParent) this, 'calculateRunnable did not catch a condition' );
     
     }

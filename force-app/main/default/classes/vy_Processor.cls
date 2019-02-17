@@ -1,3 +1,6 @@
+// Processor
+// Primary class that is Batchable, called from a ProcessorItem to run the batch
+
 public class vy_Processor implements Database.Batchable < sobject >, Database.Stateful {
 
     public enum JobStatus { SCHEDULED, INITIALIZED, QUERY, PROCESSING, COMPLETED, ERROR }
@@ -11,7 +14,7 @@ public class vy_Processor implements Database.Batchable < sobject >, Database.St
         this.status = JobStatus.INITIALIZED;
         // initialize
         this.processorItem = processorItem;
-        vy_Coordinator.debugOutput ( 'vy_Processor::constructor', '', this );
+        vy_Signal.debugOutput ( 'vy_Processor::constructor', '', this );
     }
 
     public Database.QueryLocator start ( Database.BatchableContext batchContext ) {
@@ -25,7 +28,7 @@ public class vy_Processor implements Database.Batchable < sobject >, Database.St
         try {
             // run query
             String soql = this.processorItem.getSoqlStatement ();
-            vy_Coordinator.debugOutput ( 'vy_Processor::start', 'soql query', soql );
+            vy_Signal.debugOutput ( 'vy_Processor::start', 'soql query', soql );
             return Database.getQueryLocator( soql );
         } catch ( Exception e ) {
             this.processorItem.errorLog ( 'Start', e.getMessage ());
@@ -39,14 +42,14 @@ public class vy_Processor implements Database.Batchable < sobject >, Database.St
         this.processorItem.writeLog ( this );
 
         // execute
-        vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'start', this );
+        vy_Signal.debugOutput ( 'vy_Processor::execute', 'start', this );
         try {
             this.processorItem.execute ( listToProcess );
-            vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'Iteration Complete', this );
+            vy_Signal.debugOutput ( 'vy_Processor::execute', 'Iteration Complete', this );
         } catch ( Exception e ) {
             // handle
             this.status = JobStatus.ERROR;
-            vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'TERMINATED', this );
+            vy_Signal.debugOutput ( 'vy_Processor::execute', 'TERMINATED', this );
         }
         
         this.processorItem.writeLog ( this );
@@ -65,7 +68,7 @@ public class vy_Processor implements Database.Batchable < sobject >, Database.St
         
         this.processorItem.writeLog ( this );
         this.processorItem.complete ();
-        vy_Coordinator.debugOutput ( 'vy_Processor::finish', '', this );
+        vy_Signal.debugOutput ( 'vy_Processor::finish', '', this );
 
 	}
 

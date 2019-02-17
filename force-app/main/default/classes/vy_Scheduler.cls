@@ -41,9 +41,9 @@ public class vy_Scheduler implements System.Schedulable, vy_ExceptionParent {
             // query the database for active, non running items
             List < Vyuha_Schedule_Item__c > sObjectItems = new List < Vyuha_Schedule_Item__c > ();
             string query = vy_ScheduleItem.baseSelectQuery ();
-            vy_Coordinator.debugOutput ('vy_Coordinator::getScheduleItemsToRun', 'soql query', query );
+            vy_Signal.debugOutput ('vy_Coordinator::getScheduleItemsToRun', 'soql query', query );
             sObjectItems = Database.query ( query );
-            vy_Coordinator.debugOutput ('vy_Coordinator::getScheduleItemsToRun', 'returned items', sObjectItems );
+            vy_Signal.debugOutput ('vy_Coordinator::getScheduleItemsToRun', 'returned items', sObjectItems );
             // get recurrings
 
             // transform into SI Objects
