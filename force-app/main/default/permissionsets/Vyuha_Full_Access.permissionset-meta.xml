@@ -197,10 +197,10 @@
     </objectPermissions>
     <tabSettings>
         <tab>Vyuha_Formation__c</tab>
-        <visibility>Available</visibility>
+        <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>
         <tab>Vyuha_Log__c</tab>
-        <visibility>Available</visibility>
+        <visibility>Visible</visibility>
     </tabSettings>
 </PermissionSet>
