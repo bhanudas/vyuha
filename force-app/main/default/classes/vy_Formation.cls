@@ -78,7 +78,15 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
         } else {
             return false;
         }
-        
+    }
+
+    public boolean isRunnable () {
+        // return the inverse of isRunning
+        if ( this.isRunning () == false ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public string getName () {
@@ -144,6 +152,11 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
         // send email notifications
         //coordinator.sendNotificationEmail ( this );
 
+    }
+
+    // status control
+    public void setStatus ( vy_Signal.Vyuha_Status status ) {
+        
     }
 
     // logging

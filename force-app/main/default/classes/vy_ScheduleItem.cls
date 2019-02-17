@@ -16,9 +16,19 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
     private String          formationStatus;
     private Boolean         isRunnable;
     
-    public vy_ScheduleItem ( vy_Formation formation, vy_Coordinator coordinator ) {
+    public vy_ScheduleItem ( vy_TimeHelper timeHelper ) {
+        this.formation = new vy_Formation ();
+        Datetime executionDateTime = timeHelper.now ();
+        if ( executionDateTime != null ) {
+            // have a executionDateTime to calculate issRunnable
+            this.isRunnable = this.calculateRunnable ( executionDateTime );
+        } else {
+            this.isRunnable = null;
+        }
+    }
+
+    public vy_ScheduleItem ( vy_Formation formation ) {
         this.formation      = formation;
-        this.coordinator    = coordinator;
     }
 
     public vy_ScheduleItem ( Vyuha_Schedule_Item__c siRecord, Datetime executionDateTime ) {
@@ -32,7 +42,6 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
         this.status                 = (string)      siRecord.get ( 'Status__c'                  );
         this.formationStatus        = (string)      siRecord.get ( 'Formation_Status__c'        );
 
-        this.coordinator = new vy_Coordinator ();
         this.formation = new vy_Formation ();
 
         if ( executionDateTime != null ) {
@@ -46,11 +55,12 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
     public void load ( Id recordId ) {
 
         // query for schedule item
-        vyuha_Schedule_Item__c scheduleItem;
+        List < vyuha_Schedule_Item__c > scheduleItem;
 
         try {
-            scheduleItem = [ SELECT ID, Vyuha_Formation__c FROM vyuha_Schedule_Item__c WHERE ID =: recordId ];
-            this.formation.load ( scheduleItem.Vyuha_Formation__c );
+            string soql = vy_ScheduleItem.baseSelectQuery() + ' WHERE ID = \'' + recordId + '\'';
+            scheduleItem = Database.query ( soql );
+            this.formation.load ( scheduleItem[0].Vyuha_Formation__c );
         } catch ( Exception e ) {
             throw new vy_Exception ( this, e );
         }
@@ -121,10 +131,12 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
     }
 
     public void start () {
+        // signal start
         this.formation.start ( this );
     }
 
     public void complete () {
+        // signal completion
         this.formation.complete ();
     }
 
@@ -133,7 +145,13 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
     }
 
     public void execute ( List < sObject > dataList ) {
+        // signal iteration
         this.formation.execute ( dataList );
+    }
+
+    // status control
+    public void setStatus ( vy_Signal.Vyuha_Status status ) {
+        
     }
 
     // logging

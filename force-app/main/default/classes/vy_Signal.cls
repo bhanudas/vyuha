@@ -1,5 +1,13 @@
 // vy_Signal
 // Represents a signaled message for the Vyuha system
+// usage:
+// 1. Quick create and queue
+//      vy_Signal signal = new vy_Signal ( paramaterized constructor );
+//      signal.put ();
+// 2. JSON transform, validate and execute
+//      vy_Signal signal = (vy_Signal) JSON.deserialize ( jsonStr, vy_Signal.class );
+//      signal.initialize ();
+//      
 
 public class vy_Signal implements vy_ExceptionParent {
 
@@ -11,12 +19,13 @@ public class vy_Signal implements vy_ExceptionParent {
     public String message;
     public Boolean isValid;
 
-    private Vyuha_Action vAction;
-    private Vyuha_Status vStatus;
-    private vy_Formation formation;
+    public Vyuha_Action vAction;
+    public Vyuha_Status vStatus;
+    public Signal_Type vType;
 
     public enum Vyuha_Action { START, STOP }
-    public enum Vyuha_Status { SLEEP, RUNNING, ERROR, INACTIVE }
+    public enum Vyuha_Status { SLEEP, STARTING, ITERATION, STOPPING, ERROR, INACTIVE }
+    public enum Signal_Type { ACTION, STATUS }
 
     public vy_Signal() {
 
@@ -25,28 +34,33 @@ public class vy_Signal implements vy_ExceptionParent {
     // takes public attributes and initializes the object
     // for use when instatiating via JSON serialize
     public void initialize () {
-        // default valid to true
+        // check for formationId or scheduleItem null
+        if ( this.formationId == '' ) {
+            this.formationId = null;
+        }
+        if ( this.scheduleItemId == '' ) {
+            this.scheduleItemId = null;
+        }
+        // set isValid to true
         this.isValid = true;
+
         // set the private Action and Status enums
         this.actionToEnum ();
         this.statusToEnum ();
-    }
 
-    // initialize for use with a formation
-    public void initialize ( vy_Formation formation ) {
-        this.formation = formation;
-        this.initialize ();
-        // load the formation information
-        this.formation.load ( this.formationId );
-        this.isValid = this.formation.isValid ();
-    }
-
-    // process the signal
-    public void process () {
-        // deal with actions
-        if ( this.vAction == Vyuha_Action.START ) {
-            
+        // determine the type of signal
+        if ( this.vAction == null && this.vStatus != null ) {
+            this.vType = Signal_Type.STATUS;
+        } else if ( this.vAction != null && this.vStatus == null ) {
+            this.vType = Signal_Type.ACTION;
+        } else {
+            // handle undeterminate signal
+            this.isValid = false;
         }
+    }
+
+    public boolean isValid () {
+        return this.isValid;
     }
 
     // writes a new signal to the Platform Event queue
@@ -65,10 +79,6 @@ public class vy_Signal implements vy_ExceptionParent {
         } else {
             return true;
         }
-    }
-
-    public boolean isValid () {
-        return this.isValid;
     }
 
     // converts local action as string into enum

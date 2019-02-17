@@ -2,19 +2,6 @@
 @isTest
 private class vy_Signal_TEST {
 
-    @isTest
-    static void basic_create_formation () {
-        vy_Formation mockFormation = vy_MockService.generateFormation ();
-        vy_Signal sig = new vy_Signal ();
-        sig.formationId = '123';
-        sig.scheduleItemId = '123';
-        sig.apexJobId = '123';
-        sig.action = 'START';
-        sig.status = 'SLEEP';
-        sig.message = 'Test';
-        sig.initialize ( mockFormation );
-        system.assertEquals ( true, sig.isValid ());
-    }
 
     @isTest
     static void basic_create_no_action () {
