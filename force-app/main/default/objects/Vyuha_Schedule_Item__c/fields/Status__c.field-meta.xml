@@ -6,7 +6,7 @@
     <inlineHelpText>Schedule Item Status</inlineHelpText>
     <label>Status</label>
     <length>255</length>
-    <required>true</required>
+    <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>
