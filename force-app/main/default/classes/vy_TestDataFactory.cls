@@ -20,4 +20,15 @@ public class vy_TestDataFactory {
         formationObj.load ( formation.id );
         return formationObj;
     }
+
+    public static vy_ScheduleItem createScheduleItem ( vy_Formation formation, DateTime oneTimeDateTime, String frequency ) {
+        Vyuha_Schedule_Item__c scheduleItem = new Vyuha_Schedule_Item__c ();
+        scheduleItem.One_Time_DateTime__c = oneTimeDateTime;
+        scheduleItem.Frequency__c = frequency;
+        scheduleItem.Vyuha_Formation__c = formation.getId ();
+        insert scheduleItem;
+        vy_ScheduleItem siObject = new vy_ScheduleItem ( formation );
+        siObject.load ( scheduleItem.id );
+        return siObject;
+    }
 }

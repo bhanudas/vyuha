@@ -52,7 +52,20 @@ public class vy_Signal implements vy_ExceptionParent {
         vy_Signal.debugOutput ( 'vy_Signal::constructor', 'status', status );
         vy_Signal.debugOutput ( 'vy_Signal::constructor', 'message', message );
         this.processorType = formation.getType ();
+        this.processorItem = formation;
         this.id = formation.getId ();
+        this.status = status.name ();
+        this.message = message;
+    }
+
+    public vy_Signal ( vy_ScheduleItem scheduleItem, Vyuha_Status status, String message ) {
+        vy_Signal.debugOutput ( 'vy_Signal::constructor', 'scheduleItem', scheduleItem );
+        vy_Signal.debugOutput ( 'vy_Signal::constructor', 'status', status );
+        vy_Signal.debugOutput ( 'vy_Signal::constructor', 'message', message );
+        this.processorType = scheduleItem.getType ();
+        this.processorItem = scheduleItem;
+        this.id = scheduleItem.getId ();
+        this.formationId = scheduleItem.getFormationId ();
         this.status = status.name ();
         this.message = message;
     }
@@ -80,6 +93,19 @@ public class vy_Signal implements vy_ExceptionParent {
             signal.put ();
         } else {
             throw new vy_Exception ( signal, 'Error in create from Formation' );
+        }
+    }
+
+    public static void create ( vy_ScheduleItem scheduleItem, Vyuha_Status status, String message ) {
+        vy_Signal.debugOutput ( 'vy_Signal::create', 'scheduleItem', scheduleItem );
+        vy_Signal.debugOutput ( 'vy_Signal::create', 'status', status );
+        vy_Signal.debugOutput ( 'vy_Signal::create', 'message', message );
+        vy_Signal signal = new vy_Signal ( scheduleItem, status, message );
+        signal.initialize ();
+        if ( signal.isValid ()) {
+            signal.put ();
+        } else {
+            throw new vy_Exception ( signal, 'Error in create from scheduleItem' );
         }
     }
 
@@ -113,7 +139,7 @@ public class vy_Signal implements vy_ExceptionParent {
         } else if ( this.vAction != null && this.vStatus == null ) {
             this.vType = Signal_Type.ACTION;
         } else {
-            // handle undeterminate signal
+            // handle indeterminate signal
             this.isValid = false;
         }
     }
@@ -131,23 +157,29 @@ public class vy_Signal implements vy_ExceptionParent {
     // converts local action as string into enum
     private void actionToEnum () {
         boolean foundMatch = false;
-
-        // check if action is empty
-        if (( this.action == null ) || ( this.action == '' )) {
-            this.vAction = null;
-            return;
-        }
-
-        for ( Vyuha_Action a : Vyuha_Action.values ()) {
-            if ( a.name () == this.action ) {
-                this.vAction = a;
-                foundMatch = true;
+        // only run if vAction is null
+        if ( this.vAction == null ) {
+             // check if action is empty
+            if (( this.action == null ) || ( this.action == '' )) {
+                this.vAction = null;
+                return;
             }
-        }
 
-        if ( foundMatch == false ) {
-            this.isValid = false;
+            for ( Vyuha_Action a : Vyuha_Action.values ()) {
+                if ( a.name () == this.action ) {
+                    this.vAction = a;
+                    foundMatch = true;
+                }
+            }
+
+            if ( foundMatch == false ) {
+                this.isValid = false;
+            }
+        } else {
+            // have a vAction
+            this.action = vAction.name ();
         }
+       
     }
 
     // converts local status as string into enum
@@ -176,19 +208,20 @@ public class vy_Signal implements vy_ExceptionParent {
     public void process () {
         vy_Signal.debugOutput ( 'vy_Signal::process', 'this', this );
         if ( this.isValid ) {
-            // load appropriate processorItem
-            if ( this.scheduleItemId != null ) {
-                // load schedule Item
-                vy_ScheduleItem scheduleItem = new vy_ScheduleItem ( new vy_TimeHelper ());
-                scheduleItem.load ( this.scheduleItemId );
-                this.processorItem = (vy_ProcessorItem) scheduleItem;
-            } else if ( this.formationId != null ) {
-                // load a formation
-                vy_Formation formation = new vy_Formation ( new vy_FlowInterface ());
-                formation.load ( this.formationId );
-                this.processorItem = (vy_ProcessorItem) formation;
+            // load appropriate processorItem if necessary
+            if ( this.processorItem == null ) {
+                if ( this.scheduleItemId != null ) {
+                    // load schedule Item
+                    vy_ScheduleItem scheduleItem = new vy_ScheduleItem ( new vy_Formation ( new vy_FlowInterface ()));
+                    scheduleItem.load ( this.scheduleItemId );
+                    this.processorItem = (vy_ProcessorItem) scheduleItem;
+                } else if ( this.formationId != null ) {
+                    // load a formation
+                    vy_Formation formation = new vy_Formation ( new vy_FlowInterface ());
+                    formation.load ( this.formationId );
+                    this.processorItem = (vy_ProcessorItem) formation;
+                }
             }
-
             // process actions
             if ( this.vType == Signal_Type.ACTION ) {
                 this.processActions ();

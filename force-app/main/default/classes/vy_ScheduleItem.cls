@@ -15,6 +15,11 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
     private String          formationStatus;
     private Boolean         isRunnable;
     
+    // constructor to just load the schedule item w/o evaluating runnable
+    public vy_ScheduleItem ( vy_Formation formation ) {
+        this.formation      = formation;
+    } 
+/*
     public vy_ScheduleItem ( vy_TimeHelper timeHelper ) {
         this.formation = new vy_Formation ( new vy_FlowInterface ());
         Datetime executionDateTime = timeHelper.now ();
@@ -25,11 +30,7 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
             this.isRunnable = null;
         }
     }
-
-    public vy_ScheduleItem ( vy_Formation formation ) {
-        this.formation      = formation;
-    }
-
+*/
     public vy_ScheduleItem ( Vyuha_Schedule_Item__c siRecord, Datetime executionDateTime ) {
         // turn the record into a actual si object
         this.isActive               = (boolean)     siRecord.get ( 'Active__c'                  );
@@ -59,6 +60,16 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
         try {
             string soql = vy_ScheduleItem.baseSelectQuery() + ' WHERE ID = \'' + recordId + '\'';
             scheduleItem = Database.query ( soql );
+            // set values
+            this.isActive               = (boolean)     scheduleItem [0].get ( 'Active__c'                  );
+            this.oneTimeDateTime        = (Datetime)    scheduleItem [0].get ( 'One_Time_DateTime__c'       );
+            this.lastSuccessfulRun      = (Datetime)    scheduleItem [0].get ( 'Last_Successful_Run__c'     );
+            this.lastErrorEncountered   = (Datetime)    scheduleItem [0].get ( 'Last_Error_Encountered__c'  );
+            this.frequency              = (string)      scheduleItem [0].get ( 'Frequency__c'               );
+            this.id                     = (Id)          scheduleItem [0].get ( 'Id'                         );
+            this.status                 = (string)      scheduleItem [0].get ( 'Status__c'                  );
+            this.formationStatus        = (string)      scheduleItem [0].get ( 'Formation_Status__c'        );
+            // load formation 
             this.formation.load ( scheduleItem[0].Vyuha_Formation__c );
         } catch ( Exception e ) {
             throw new vy_Exception ( this, e );
@@ -150,8 +161,21 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
 
     // status control
     public void setStatus ( vy_Signal.Vyuha_Status status ) {
-        
+        Vyuha_Schedule_Item__c scheduleItem = new Vyuha_Schedule_Item__c ();
+        scheduleItem.id = this.id;
+        scheduleItem.Status__c = status.name ();
+        update scheduleItem;
     }
+
+    public string getStatus () {
+       string soql = 'SELECT Status__c FROM Vyuha_Schedule_Item__c WHERE ID = \'' + this.id + '\'';
+       List < sObject > results = Database.query ( soql );
+       if ( results.size () == 1 ) {
+           return (String) results[0].get ( 'Status__c' );
+       } else {
+           throw new vy_Exception ((vy_ExceptionParent) this, 'getStatus did not find an ID ' + this.id );
+       }
+   }
 
     // data access
     public string getId () {
@@ -160,6 +184,10 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
 
     public string getType () {
         return 'SCHEDULEITEM';
+    }
+
+    public string getFormationId () {
+        return formation.getId ();
     }
 
     // exception

@@ -81,9 +81,6 @@ private class vy_Signal_TEST {
         // create formation
         vy_Formation formation = vy_TestDataFactory.createFormation ( 'testflow', 'id', true, 200, 'SELECT ID FROM Contact', 'test@test.com', null );
         ID formationId = formation.getId ();
-        vy_MockService.Parameters params = new vy_MockService.Parameters ();
-        params.put ( 'apexJobId', '123' );
-        params.put ( 'processorItem', formation );
 
         vy_Processor processor = new vy_Processor ( formation );
 
@@ -97,4 +94,70 @@ private class vy_Signal_TEST {
         System.assertEquals ( 'SLEEPING', formation.getStatus ());
 
     }
+
+    @isTest
+    static void create_formation_status () {
+
+        // create formation
+        vy_Formation formation = vy_TestDataFactory.createFormation ( 'testflow', 'id', true, 200, 'SELECT ID FROM Contact', 'test@test.com', null );
+        ID formationId = formation.getId ();
+
+        Test.startTest ();
+        vy_Signal.create ( formation, vy_Signal.Vyuha_Status.SLEEPING, 'going to sleep' );
+        Test.stopTest ();
+
+        // reload formation
+        formation = new vy_Formation ( new vy_FlowInterface ());
+        formation.load ( formationid );
+        System.assertEquals ( 'SLEEPING', formation.getStatus ());
+
+    }
+
+    @isTest
+    static void create_scheduleItem_status () {
+
+        // create formation
+        vy_Formation formation = vy_TestDataFactory.createFormation ( 'testflow', 'id', true, 200, 'SELECT ID FROM Contact', 'test@test.com', null );
+        vy_ScheduleItem scheduleItem = vy_TestDataFactory.createScheduleItem ( formation, DateTime.now ().addDays (-1), 'One Time' );
+        ID scheduleItemId = scheduleItem.getId ();
+
+        Test.startTest ();
+        vy_Signal.create ( scheduleItem, vy_Signal.Vyuha_Status.SLEEPING, 'going to sleep' );
+        Test.stopTest ();
+
+        // reload scheduleItem
+        scheduleItem = new vy_ScheduleItem ( formation );
+        scheduleItem.load ( scheduleItemId );
+        System.assertEquals ( 'SLEEPING', scheduleItem.getStatus ());
+
+    }
+
+    @isTest
+    static void action_start_formation () {
+        vy_Formation formation = vy_TestDataFactory.createFormation ( 'testflow', 'id', true, 200, 'SELECT ID FROM Contact', 'test@test.com', null );
+        ID formationId = formation.getId ();
+        vy_MockService.Parameters params = new vy_MockService.Parameters ();
+        params.put ( 'isValid', true );
+        params.put ( 'isRunning', false );
+        params.put ( 'isRunnable', true );
+        params.put ( 'formation', formation );
+        vy_Formation mockFormation = (vy_Formation) Test.createStub ( vy_Formation.class, new vy_MockService ( params ));
+
+        Test.startTest ();
+        vy_Signal sig = new vy_Signal ( mockFormation, vy_Signal.Vyuha_Status.STARTING, null );
+        sig.vAction = vy_Signal.Vyuha_Action.START;
+        sig.vStatus = null;  // override the status so it doesn't bug out
+        sig.status = null;
+        sig.initialize ();
+        sig.process ();
+        Test.stopTest ();
+
+        // check that formation is starting
+        // reload formation
+        formation = new vy_Formation ( new vy_FlowInterface ());
+        formation.load ( formationid );
+        System.assertEquals ( 'STARTING', formation.getStatus ());
+
+    }
+
 }

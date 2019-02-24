@@ -32,7 +32,8 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
     }
 
     public void load ( String recordId ) {
-
+        vy_Signal.debugOutput ('vy_Formation::load', 'id', recordId );
+        
         try {
             // read from CMT
             List < string > fields = new List < string > ();
@@ -69,6 +70,8 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
         } catch ( Exception e ) {
             throw new vy_Exception ( this, e );
         } 
+
+        vy_Signal.debugOutput ('vy_Formation::load', 'this', this );
         
     }
 

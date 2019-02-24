@@ -23,6 +23,14 @@ global class vy_MockService implements System.StubProvider {
                 system.debug ( 'vy_MockService - vy_Formation - isValid ' + params );
                 return vy_Formation_isValid ();
             }
+            if ( stubbedMethodName == 'isRunning' ) {
+                system.debug ( 'vy_MockService - vy_Formation - isRunning ' + params );
+                return vy_Formation_isRunning ();
+            }
+            if ( stubbedMethodName == 'isRunnable' ) {
+                system.debug ( 'vy_MockService - vy_Formation - isRunnable ' + params );
+                return vy_Formation_isRunnable ();
+            }
             if ( stubbedMethodName == 'load' ) {
                 system.debug ( 'vy_MockService - vy_Formation - load ' + params );
                 return vy_Formation_load ();
@@ -34,6 +42,11 @@ global class vy_MockService implements System.StubProvider {
             if ( stubbedMethodName == 'getBatchSize' ) {
                 system.debug ( 'vy_MockService - vy_Formation - getBatchSize ' + params );
                 return vy_Formation_getBatchSize ();
+            }
+            if ( stubbedMethodName == 'start' ) {
+                system.debug ( 'vy_MockService - vy_Formation - start ' + params );
+                vy_Formation_start ();
+                return null;
             }
         }
 
@@ -56,6 +69,14 @@ global class vy_MockService implements System.StubProvider {
         return (Boolean) params.get ('isValid');
     }
 
+    private Boolean vy_Formation_isRunning () {
+        return (Boolean) params.get ('isRunning');
+    }
+
+    private Boolean vy_Formation_isRunnable () {
+        return (Boolean) params.get ('isRunnable');
+    }
+
     private Boolean vy_Formation_load () {
         return (Boolean) params.get ('loadResult');
     }
@@ -66,6 +87,11 @@ global class vy_MockService implements System.StubProvider {
 
     private integer vy_Formation_getBatchSize () {
         return ( integer ) params.get ('batchSize');
+    }
+
+    private void vy_Formation_start () {
+        // fake the start
+        vy_Signal.create ( (vy_Formation) params.get ('formation'), vy_Signal.Vyuha_Status.STARTING, '' );
     }
 
     // vy_TimeHelper Stubs
