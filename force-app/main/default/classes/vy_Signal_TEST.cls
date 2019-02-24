@@ -10,7 +10,7 @@ private class vy_Signal_TEST {
         sig.scheduleItemId = '123';
         sig.apexJobId = '123';
         sig.action = '';
-        sig.status = 'SLEEP';
+        sig.status = 'SLEEPING';
         sig.message = 'Test';
         sig.initialize ();
         system.assertEquals ( true, sig.isValid ());
@@ -57,7 +57,7 @@ private class vy_Signal_TEST {
 
     @isTest
     static void create_from_json () {
-        string jsonStr = '{"formationId":"123","scheduleItemId":"123","apexJobId":"123","action":"START","status":"SLEEP"}';
+        string jsonStr = '{"formationId":"123","scheduleItemId":"123","apexJobId":"123","action":"START"}';
         vy_Signal sig = (vy_Signal) JSON.deserialize ( jsonStr, vy_Signal.class );
         sig.initialize ();
         system.assertEquals ( true, sig.isValid ());

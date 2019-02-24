@@ -16,7 +16,7 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
     private Boolean         isRunnable;
     
     public vy_ScheduleItem ( vy_TimeHelper timeHelper ) {
-        this.formation = new vy_Formation ();
+        this.formation = new vy_Formation ( new vy_FlowInterface ());
         Datetime executionDateTime = timeHelper.now ();
         if ( executionDateTime != null ) {
             // have a executionDateTime to calculate issRunnable
@@ -41,7 +41,7 @@ public class vy_ScheduleItem implements vy_ProcessorItem, vy_ExceptionParent {
         this.status                 = (string)      siRecord.get ( 'Status__c'                  );
         this.formationStatus        = (string)      siRecord.get ( 'Formation_Status__c'        );
 
-        this.formation = new vy_Formation ();
+        this.formation = new vy_Formation ( new vy_FlowInterface ());
 
         if ( executionDateTime != null ) {
             // have a executionDateTime to calculate issRunnable

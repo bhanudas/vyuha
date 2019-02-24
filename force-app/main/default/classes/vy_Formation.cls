@@ -16,8 +16,9 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
     private ID id;
 
     private vy_ScheduleItem scheduleItem;
+    private vy_FlowInterface flowInterface;
 
-    public vy_Formation ( ) {
+    public vy_Formation ( vy_FlowInterface flowInterface ) {
         this.soqlStatement = '';
         this.flowInterviewName = '';
         this.isValid = false;
@@ -27,6 +28,7 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
         this.recordsProcessed = 0;
         this.flowInputVariableName = '';
         this.notificationEmailAddresses = '';
+        this.flowInterface = flowInterface;
     }
 
     public void load ( String recordId ) {
@@ -60,6 +62,8 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
             this.soqlStatement                  = (string) formationRecords[0].get ( 'Soql_Statement__c' );
             this.notificationEmailAddresses     = (string) formationRecords[0].get ( 'Notification_Email__c' );
             this.flowInputVariableName          = (string) formationRecords[0].get ( 'Flow_Input_Variable_Name__c' );
+            // set the flowInterface
+            this.flowInterface.initialize ( this.flowInputVariableName, this.flowInterviewName );
             // TODO validate the formation
             this.isValid = true;
         } catch ( Exception e ) {
@@ -112,18 +116,8 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
     public void execute ( List < sObject > dataList ) {
         // iterate through records to process, passing into a Flow Interview
         try {
-            for ( sObject sObj : dataList ) {
-                String inputId = (String) sObj.get ( this.flowInputVariableName );
-                // convert the IDs into a Map structure for input into flow
-                Map < String, String > inputMap = new Map < String, String > ();
-                inputMap.put ( 'inputID', inputId );
-                vy_Signal.debugOutput ( 'vy_Formation::executeFlow', 'inputMap', inputMap );
-                vy_Signal.debugOutput ( 'vy_Formation::executeFlow', 'Flow', this.flowInterviewName );
-                // invoke the associated Flow
-                Flow.Interview jobFlow = Flow.Interview.CreateInterview ( this.flowInterviewName, inputMap );
-                jobFlow.start ();
-                this.recordsProcessed++;
-            }
+            flowInterface.setData ( dataList );
+            this.recordsProcessed += flowInterface.execute ();
         } catch ( Exception e ) {
             // handle
             throw new vy_Exception ( this, e );

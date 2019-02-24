@@ -169,7 +169,7 @@ public class vy_Signal implements vy_ExceptionParent {
                 this.processorItem = (vy_ProcessorItem) scheduleItem;
             } else if ( this.formationId != null ) {
                 // load a formation
-                vy_Formation formation = new vy_Formation ();
+                vy_Formation formation = new vy_Formation ( new vy_FlowInterface ());
                 formation.load ( this.formationId );
                 this.processorItem = (vy_ProcessorItem) formation;
             }
