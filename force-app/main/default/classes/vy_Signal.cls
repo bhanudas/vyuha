@@ -25,7 +25,7 @@ public class vy_Signal implements vy_ExceptionParent {
     public Vyuha_Status vStatus;
     public Signal_Type vType;
 
-    private vy_ProcessorItem processorItem;
+    private transient vy_ProcessorItem processorItem;
 
     public enum Vyuha_Action { START, STOP }
     public enum Vyuha_Status { SLEEPING, STARTING, ITERATION, STOPPING, ERROR, COMPLETE, INACTIVE }
@@ -36,6 +36,9 @@ public class vy_Signal implements vy_ExceptionParent {
     }
 
     public vy_Signal ( vy_Processor processor, Vyuha_Status status, String message ) {
+        vy_Signal.debugOutput ( 'vy_Signal::constructor', 'processor', processor );
+        vy_Signal.debugOutput ( 'vy_Signal::constructor', 'status', status );
+        vy_Signal.debugOutput ( 'vy_Signal::constructor', 'message', message );
         this.processorItem = processor.getProcessorItem ();
         this.processorType = this.processorItem.getType ();
         this.id = this.processorItem.getId ();
@@ -45,6 +48,9 @@ public class vy_Signal implements vy_ExceptionParent {
     }
 
     public vy_Signal ( vy_Formation formation, Vyuha_Status status, String message ) {
+        vy_Signal.debugOutput ( 'vy_Signal::constructor', 'formation', formation );
+        vy_Signal.debugOutput ( 'vy_Signal::constructor', 'status', status );
+        vy_Signal.debugOutput ( 'vy_Signal::constructor', 'message', message );
         this.processorType = formation.getType ();
         this.id = formation.getId ();
         this.status = status.name ();
@@ -52,6 +58,9 @@ public class vy_Signal implements vy_ExceptionParent {
     }
 
     public static void create ( vy_Processor processor, Vyuha_Status status, String message ) {
+        vy_Signal.debugOutput ( 'vy_Signal::create', 'processor', processor );
+        vy_Signal.debugOutput ( 'vy_Signal::create', 'status', status );
+        vy_Signal.debugOutput ( 'vy_Signal::create', 'message', message );
         vy_Signal signal = new vy_Signal ( processor, status, message );
         signal.initialize ();
         if ( signal.isValid ()) {
@@ -62,6 +71,9 @@ public class vy_Signal implements vy_ExceptionParent {
     }
 
     public static void create ( vy_Formation formation, Vyuha_Status status, String message ) {
+        vy_Signal.debugOutput ( 'vy_Signal::create', 'formation', formation );
+        vy_Signal.debugOutput ( 'vy_Signal::create', 'status', status );
+        vy_Signal.debugOutput ( 'vy_Signal::create', 'message', message );
         vy_Signal signal = new vy_Signal ( formation, status, message );
         signal.initialize ();
         if ( signal.isValid ()) {
@@ -74,6 +86,7 @@ public class vy_Signal implements vy_ExceptionParent {
     // takes public attributes and initializes the object
     // for use when instatiating via JSON serialize
     public void initialize () {
+        vy_Signal.debugOutput ( 'vy_Signal::initialize', 'this', this );
         // set correct id
         if ( this.processorType == 'FORMATION' ) {
             this.formationId = this.id;
@@ -111,6 +124,7 @@ public class vy_Signal implements vy_ExceptionParent {
 
     // writes a new signal to the Platform Event queue
     public void put () {
+        vy_Signal.debugOutput ( 'vy_Signal::put', 'this', this );
         vy_EventHandler.create ( this );
     }
 
@@ -160,6 +174,7 @@ public class vy_Signal implements vy_ExceptionParent {
 
     // --- processing actions and status updates
     public void process () {
+        vy_Signal.debugOutput ( 'vy_Signal::process', 'this', this );
         if ( this.isValid ) {
             // load appropriate processorItem
             if ( this.scheduleItemId != null ) {
@@ -187,6 +202,7 @@ public class vy_Signal implements vy_ExceptionParent {
     }
 
     private void processActions () {
+        vy_Signal.debugOutput ( 'vy_Signal::processActions', 'this', this );
         if ( this.vAction == Vyuha_Action.START ) {
             // check validity and start if possible
             if ( this.processorItem.isValid () == false ) {
@@ -206,11 +222,12 @@ public class vy_Signal implements vy_ExceptionParent {
     }
 
     private void processStatus () {
+        vy_Signal.debugOutput ( 'vy_Signal::processStatus', 'this', this );
         this.processorItem.setStatus ( this.vStatus );
     }
 
     private void writeLog () {
-
+        vy_Signal.debugOutput ( 'vy_Signal::writeLog', 'this', this );
         // check to see if Job ID already exists
         List < vyuha_log__c > vlList = fetchLogEntry ( this.apexJobId );
         
@@ -228,7 +245,7 @@ public class vy_Signal implements vy_ExceptionParent {
         vl.Vyuha_Formation__c = this.formationId;
         vl.Vyuha_Schedule_Item__c = this.scheduleItemId;
         upsert vl;
-
+        vy_Signal.debugOutput ( 'vy_Signal::writeLog', 'vl', vl );
     }
 
     private List < vyuha_log__c > fetchLogEntry ( ID apexJobId ) {

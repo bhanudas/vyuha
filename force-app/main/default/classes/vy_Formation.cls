@@ -151,7 +151,10 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
 
     // status control
     public void setStatus ( vy_Signal.Vyuha_Status status ) {
-        
+        Vyuha_Formation__c formation = new Vyuha_Formation__c ();
+        formation.id = this.id;
+        formation.Status__c = status.name ();
+        update formation;
     }
 
     // data access
@@ -170,7 +173,7 @@ public class vy_Formation implements vy_ProcessorItem, vy_ExceptionParent {
     }
 
    // get status field
-   private string getStatus () {
+   public string getStatus () {
        string soql = 'SELECT Status__c FROM Vyuha_Formation__c WHERE ID = \'' + this.id + '\'';
        List < sObject > results = Database.query ( soql );
        if ( results.size () == 1 ) {

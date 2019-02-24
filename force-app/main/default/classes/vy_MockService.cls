@@ -7,6 +7,10 @@ global class vy_MockService implements System.StubProvider {
         this.params = params;
     }
 
+    global vy_MockService ( Parameters params ) {
+        this.params = params.data;
+    }
+
     global Object handleMethodCall ( Object stubbedObject, String stubbedMethodName, Type returnType, List < Type > listOfParamTypes, List < String > listOfParamNames, List < Object > listOfArgs ) {
         system.debug ( 'vy_MockService.handleMethodCall ( ' + stubbedMethodName + ') ' + stubbedObject ); 
 
@@ -64,7 +68,7 @@ global class vy_MockService implements System.StubProvider {
         return ( integer ) params.get ('batchSize');
     }
 
-    // vy_Scheduler Stubs
+    // vy_TimeHelper Stubs
     private Datetime vy_TimeHelper_Now () {
         return (DateTime) params.get ( 'now' );
     }
@@ -82,4 +86,20 @@ global class vy_MockService implements System.StubProvider {
         return mockFormation;
     }
 
+    global class Parameters {
+        global Map < String, Object > data;
+        
+        global Parameters () {
+            this.data = new Map < String, Object > ();
+        }
+
+        global Parameters ( String key, Object val ) {
+            this ();
+            data.put ( key, val );
+        }
+
+        global void put ( String key, Object val ) {
+            data.put ( key, val );
+        }
+    }
 }

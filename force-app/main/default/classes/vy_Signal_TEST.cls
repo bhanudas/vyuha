@@ -74,4 +74,27 @@ private class vy_Signal_TEST {
         sig.put ();
         Test.stopTest ();        
     }
+
+    @isTest
+    static void create_processor_status () {
+
+        // create formation
+        vy_Formation formation = vy_TestDataFactory.createFormation ( 'testflow', 'id', true, 200, 'SELECT ID FROM Contact', 'test@test.com', null );
+        ID formationId = formation.getId ();
+        vy_MockService.Parameters params = new vy_MockService.Parameters ();
+        params.put ( 'apexJobId', '123' );
+        params.put ( 'processorItem', formation );
+
+        vy_Processor processor = new vy_Processor ( formation );
+
+        Test.startTest ();
+        vy_Signal.create ( processor, vy_Signal.Vyuha_Status.SLEEPING, 'going to sleep' );
+        Test.stopTest ();
+
+        // reload formation
+        formation = new vy_Formation ( new vy_FlowInterface ());
+        formation.load ( formationid );
+        System.assertEquals ( 'SLEEPING', formation.getStatus ());
+
+    }
 }

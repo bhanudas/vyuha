@@ -78,6 +78,7 @@ public class vy_Processor implements Database.Batchable < sobject >, Database.St
     public ID getApexJobId () {
         return this.apexJobId;
     }
+
     public vy_ProcessorItem getProcessorItem () {
         return this.processorItem;
     }
