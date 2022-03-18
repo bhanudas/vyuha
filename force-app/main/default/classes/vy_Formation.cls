@@ -118,21 +118,20 @@ global with sharing class vy_Formation {
         for ( sObject sObj : recordsToProcess ) {
             String inputId = (String) sObj.get ('id');
             idList.add ( inputId );
-            // convert the IDs into a Map structure for input into flow
-            Map < String, List < String >> inputMap = new Map < String, List < String >> ();
-            inputMap.put ( 'inputIDs', idList );
-            vy_Coordinator.debugOutput ( 'vy_Formation::executeFlow', 'inputMap', inputMap );
-            vy_Coordinator.debugOutput ( 'vy_Formation::executeFlow', 'Flow', this.flowInterviewName );
+        }
+        // convert the IDs into a Map structure for input into flow
+        Map < String, List < String >> inputMap = new Map < String, List < String >> ();
+        inputMap.put ( 'inputIDs', idList );
+        vy_Coordinator.debugOutput ( 'vy_Formation::executeFlow', 'inputMap', inputMap );
+        vy_Coordinator.debugOutput ( 'vy_Formation::executeFlow', 'Flow', this.flowInterviewName );
 
-            // invoke the associated Flow
-            try {
-                Flow.Interview jobFlow = Flow.Interview.CreateInterview ( this.flowInterviewName, inputMap );
-                jobFlow.start ();
-            } catch ( Exception ex ) {
-                this.addError('executeFlow', ex.getMessage ());
-                return false; // return false if execute fails
-            }
-            
+        // invoke the associated Flow
+        try {
+            Flow.Interview jobFlow = Flow.Interview.CreateInterview ( this.flowInterviewName, inputMap );
+            jobFlow.start ();
+        } catch ( Exception ex ) {
+            this.addError('executeFlow', ex.getMessage ());
+            return false; // return false if execute fails
         }
 
         return true; 
