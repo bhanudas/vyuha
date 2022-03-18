@@ -91,5 +91,61 @@ public class vy_Tests {
             //System.assertEquals ( 'Vyuha', c.LastName );
         }
     }
+
+    @isTest
+    static void onDemandBasic () {
+        integer testSize = 10;
+        List < Contact > testContacts = new List < Contact > ();
+        for ( integer i = 0; i < testSize; i++ ) {
+            Contact c = new Contact ();
+            c.lastName = 'oldValue';
+            testContacts.add ( c );
+        }
+        insert testContacts;
+
+        String jobName = 'Test On Demand';
+        String flowInterviewName = 'Vyuha_On_Demand_Test';
+        String soqlStatement = 'SELECT Id FROM Contact';
+        Integer batchSize = 25;
+
+        Test.startTest ();
+        vy_Formation formation = new vy_Formation ( jobName, flowInterviewName, soqlStatement, batchSize, null );
+        formation.launch ();
+        Test.stopTest ();
+
+        // query contacts
+        testContacts = [ SELECT ID, LastName FROM Contact ];
+
+        for ( Contact c : testContacts ) {
+            System.assertEquals ( 'Vyuha', c.LastName );
+        }
+
+    }
+
+    @isTest
+    static void errorLogTest () {
+        integer testSize = 10;
+        List < Contact > testContacts = new List < Contact > ();
+        for ( integer i = 0; i < testSize; i++ ) {
+            Contact c = new Contact ();
+            c.lastName = 'oldValue';
+            testContacts.add ( c );
+        }
+        insert testContacts;
+
+        String jobName = 'Test On Demand';
+        String flowInterviewName = 'fail-name';
+        String soqlStatement = 'SELECT Id FROM Contact';
+        Integer batchSize = 25;
+
+        Test.startTest ();
+        vy_Formation formation = new vy_Formation ( jobName, flowInterviewName, soqlStatement, batchSize, null );
+        formation.launch ();
+        Test.stopTest ();
+
+        List < Vyuha_Log__c > logs = [ SELECT Id, Apex_Job_Id__c, Flow_Interview_Name__c, Formation_Name__c, Status__c, Message__c, Message_Long__c FROM Vyuha_Log__c ];
+        System.debug ( 'logs ===> ' + logs );
+    }
     
 }
+

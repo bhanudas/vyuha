@@ -28,6 +28,7 @@ global with sharing class vy_Formation {
     // on demand initialization
     global vy_Formation ( String jobName, String flowInterviewName, String soqlStatement, Integer batchSize, String notificationEmailAddresses ) {
         this.isOnDemand = true;
+        this.isValid = true;
         this.name = jobName;
         this.flowInterviewName = flowInterviewName;
         this.soqlStatement = soqlStatement;
@@ -107,28 +108,40 @@ global with sharing class vy_Formation {
         return this.batchSize;
     }
 
+    global string getErrorMessage () {
+        return this.errorMessage;
+    }
+
     global Boolean executeFlow ( List < sObject > recordsToProcess ) {
         // iterate through records to process, passing into a Flow Interview
+        List < String > idList = new List < String > ();
         for ( sObject sObj : recordsToProcess ) {
             String inputId = (String) sObj.get ('id');
+            idList.add ( inputId );
             // convert the IDs into a Map structure for input into flow
-            Map < String, String > inputMap = new Map < String, String > ();
-            inputMap.put ( 'inputID', inputId );
+            Map < String, List < String >> inputMap = new Map < String, List < String >> ();
+            inputMap.put ( 'inputIDs', idList );
             vy_Coordinator.debugOutput ( 'vy_Formation::executeFlow', 'inputMap', inputMap );
             vy_Coordinator.debugOutput ( 'vy_Formation::executeFlow', 'Flow', this.flowInterviewName );
 
-            // TODO: error handling 
             // invoke the associated Flow
-            Flow.Interview jobFlow = Flow.Interview.CreateInterview ( this.flowInterviewName, inputMap );
-            jobFlow.start ();
+            try {
+                Flow.Interview jobFlow = Flow.Interview.CreateInterview ( this.flowInterviewName, inputMap );
+                jobFlow.start ();
+            } catch ( Exception ex ) {
+                this.addError('executeFlow', ex.getMessage ());
+                return false; // return false if execute fails
+            }
+            
         }
 
-        return true; // return false if execute fails
+        return true; 
     }
 
     global void addError ( String stage, String message ) {
         this.errorCount++;
         this.errorMessage = this.errorMessage + '\n' + '(Formation: ' + this.name + ') Error #' + String.valueOf ( this.errorCount ) + ' ------\n' +'Stage: ' + stage + '\n' + 'Message: ' + message + '\n';
+        System.debug ( 'formation::error ====>' + this.errorMessage );
     }
 
     global void complete () {

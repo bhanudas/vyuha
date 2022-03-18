@@ -8,7 +8,7 @@ global with sharing class vy_Coordinator {
         
     }
 
-    global void writeLogEntry ( vy_Processor processor ) {
+    global void writeLogEntry ( vy_Processor processor, vy_Formation formation ) {
 
         // check to see if Job ID already exists
         List < vyuha_log__c > vlList = fetchLogEntry ( processor.getApexJobId ());
@@ -23,6 +23,11 @@ global with sharing class vy_Coordinator {
         vl.Apex_Job_ID__c = processor.getApexJobId ();
         vl.Status__c = processor.getStatus ().name ();
         vl.id = existingVl;
+        // try formation if available
+        if ( formation != null ) {
+            vl.Message__c = formation.getErrorMessage ().left (255);
+            vl.Message_Long__c = formation.getErrorMessage ().left (1000);
+        }
 
         upsert vl;
 

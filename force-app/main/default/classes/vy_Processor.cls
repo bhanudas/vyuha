@@ -20,7 +20,7 @@ global with sharing class vy_Processor implements Database.Batchable < sobject >
         // set control variables
         this.status = JobStatus.QUERY;
         this.apexJobId = batchContext.getJobId ();
-        coordinator.writeLogEntry ( this );
+        coordinator.writeLogEntry ( this, this.formation );
         if ( this.formation.isValid () == false ) {
             this.formation.addError ( 'Start', 'Warning, Formation is marked as invalid' );
         }
@@ -38,7 +38,7 @@ global with sharing class vy_Processor implements Database.Batchable < sobject >
 	global void execute ( Database.BatchableContext batchContext, List < sObject > listToProcess ) {
         // set control variables
         this.status = JobStatus.PROCESSING;
-        coordinator.writeLogEntry ( this );
+        coordinator.writeLogEntry ( this, this.formation );
 
         // execute
         vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'start', this );
@@ -51,7 +51,7 @@ global with sharing class vy_Processor implements Database.Batchable < sobject >
             // success
             vy_Coordinator.debugOutput ( 'vy_Processor::execute', 'Iteration Complete', this );
         }
-        coordinator.writeLogEntry ( this );
+        coordinator.writeLogEntry ( this, this.formation );
 	}
 
 	global void finish ( Database.BatchableContext batchContext ) {
@@ -65,7 +65,7 @@ global with sharing class vy_Processor implements Database.Batchable < sobject >
             this.status = JobStatus.COMPLETED;
         }
         
-        coordinator.writeLogEntry ( this );
+        coordinator.writeLogEntry ( this, this.formation );
         this.formation.complete ();
         vy_Coordinator.debugOutput ( 'vy_Processor::finish', '', this );
 
