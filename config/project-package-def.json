@@ -1,0 +1,26 @@
+{
+    "orgName": "Vyuha",
+    "edition": "Enterprise",
+    "sourceApiVersion" : "54.0",
+    "settings": {
+        "lightningExperienceSettings": {
+            "enableS1DesktopEnabled": true
+        }
+    },
+    "packageDirectories": [
+        {
+            "path": "force-app",
+            "default": true,
+            "package": "Vyuha",
+            "versionName": "1.0.0",
+            "versionDescription": "Vyuha",
+            "versionNumber": "1.0.0.NEXT",
+            "definitionFile": "config/scratch-org-def.json"
+        }
+    ],
+    "packageAliases": {
+        "Vyuha": "0Ho5c0000004CFWCA2"
+    },
+    "namespace": "vyuha",
+    "sfdcLoginUrl": "https://login.salesforce.com"
+}
