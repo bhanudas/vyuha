@@ -69,9 +69,12 @@ global with sharing class vy_Processor implements Database.Batchable < sobject >
         this.formation.complete ();
         vy_Coordinator.debugOutput ( 'vy_Processor::finish', '', this );
 
-        // fetch and run next Formation
-        vy_Formation nextFormation = vy_Coordinator.getNextFormation ( this.formation );
-        nextFormation.launch ();
+        // fetch and run next Formation - only run if not on demand
+        if ( this.formation.isOnDemand == false ) {
+            vy_Formation nextFormation = vy_Coordinator.getNextFormation ( this.formation );
+            nextFormation.launch ();
+        }
+        
 	}
 
     global JobStatus getStatus () {

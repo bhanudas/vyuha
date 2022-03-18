@@ -6,6 +6,7 @@ global with sharing class vy_Formation {
     global String soqlStatement;
     global String flowInterviewName;
     global Boolean isValid;
+    global Boolean isOnDemand;
     global Integer batchSize;
     global integer recordsProcessed;
 
@@ -18,6 +19,20 @@ global with sharing class vy_Formation {
         this.flowInterviewName = '';
         this.isValid = false;
         this.name = '';
+        this.errorCount = 0;
+        this.errorMessage = '';
+        this.recordsProcessed = 0;
+        this.isOnDemand = false;
+    }
+
+    // on demand initialization
+    global vy_Formation ( String jobName, String flowInterviewName, String soqlStatement, Integer batchSize, String notificationEmailAddresses ) {
+        this.isOnDemand = true;
+        this.name = jobName;
+        this.flowInterviewName = flowInterviewName;
+        this.soqlStatement = soqlStatement;
+        this.batchSize = batchSize;
+        this.notificationEmailAddresses = notificationEmailAddresses;
         this.errorCount = 0;
         this.errorMessage = '';
         this.recordsProcessed = 0;
@@ -142,7 +157,7 @@ global with sharing class vy_Formation {
 
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setToAddresses(toaddress);
-        mail.setsubject( 'Salesforce Automated Formation Job Processing Report ' + dateString );
+        mail.setsubject( 'Salesforce Automated Job Processing Report ' + dateString );
         mail.setPlainTextBody(body);
         
         // send the email.
