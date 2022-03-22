@@ -5,13 +5,13 @@ public with sharing class vy_OnDemandInvocable {
         public String flowApiName;
         @InvocableVariable ( label='Target Object API Name' description='SOQL statement = FROM Clause' required=true )
         public String targetObject;
-        @InvocableVariable ( label='Filter (1) Field API Name' description='SOQL statement = WHERE Field' required=true )
+        @InvocableVariable ( label='Filter (1) Field API Name' description='SOQL statement = WHERE Field' required=false )
         public String filterFieldApiName1;
-        @InvocableVariable ( label='Filter (1) Value' description='SOQL statement = WHERE Value' required=true )
+        @InvocableVariable ( label='Filter (1) Value' description='SOQL statement = WHERE Value' required=false )
         public String filterValue1;
-        @InvocableVariable ( label='Filter (2) Field API Name' description='SOQL statement = WHERE Field' required=true )
+        @InvocableVariable ( label='Filter (2) Field API Name' description='SOQL statement = WHERE Field' required=false )
         public String filterFieldApiName2;
-        @InvocableVariable ( label='Filter (2) Value' description='SOQL statement = WHERE Value' required=true )
+        @InvocableVariable ( label='Filter (2) Value' description='SOQL statement = WHERE Value' required=false )
         public String filterValue2;
         @InvocableVariable ( label='On Demand Name' description='Name identifier for job/run' required=true )
         public String onDemandName;
