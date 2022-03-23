@@ -13,6 +13,10 @@ public with sharing class vy_OnDemandInvocable {
         public String filterFieldApiName2;
         @InvocableVariable ( label='Filter (2) Value' description='SOQL statement = WHERE Value' required=false )
         public String filterValue2;
+        @InvocableVariable ( label='Filter (3) Field API Name' description='SOQL statement = WHERE Field' required=false )
+        public String filterFieldApiName3;
+        @InvocableVariable ( label='Filter (3) Value' description='SOQL statement = WHERE Value' required=false )
+        public String filterValue3;
         @InvocableVariable ( label='On Demand Name' description='Name identifier for job/run' required=true )
         public String onDemandName;
         @InvocableVariable ( label='Batch Size' description='Number of records to run per batch' required=true )
@@ -27,14 +31,20 @@ public with sharing class vy_OnDemandInvocable {
             String soqlStatement = 'SELECT Id FROM ' + p.targetObject;
             String whereClause1 = null;
             String whereClause2 = null;
+            String whereClause3 = null;
             if (( String.isEmpty ( p.filterFieldApiName1) == false ) && ( String.isEmpty( p.filterValue1 ) == false )) {
                 whereClause1 = '(' + p.filterFieldApiName1 + '=\'' + p.filterValue1 + '\')';
             }
             if (( String.isEmpty ( p.filterFieldApiName2) == false ) && ( String.isEmpty( p.filterValue2 ) == false )) {
                 whereClause2 = '(' + p.filterFieldApiName2 + '=\'' + p.filterValue2 + '\')';
             }
-            // dual clauses
-            if (( whereClause1 != null ) && ( whereClause2 != null )) {
+            if (( String.isEmpty ( p.filterFieldApiName3) == false ) && ( String.isEmpty( p.filterValue3 ) == false )) {
+                whereClause2 = '(' + p.filterFieldApiName3 + '=\'' + p.filterValue3 + '\')';
+            }
+            // review clauses
+            if (( whereClause1 != null ) && ( whereClause2 != null ) && ( whereClause3 != null )) {
+                soqlStatement = soqlStatement + ' WHERE (' + whereClause1 + ' AND ' + whereClause2 + ' AND ' + whereClause3 + ')';
+            } else if (( whereClause1 != null ) && ( whereClause2 != null )) {
                 soqlStatement = soqlStatement + ' WHERE (' + whereClause1 + ' AND ' + whereClause2 + ')';
             } else if ( whereClause1 != null ) {
                 soqlStatement = soqlStatement + ' WHERE ' + whereClause1;

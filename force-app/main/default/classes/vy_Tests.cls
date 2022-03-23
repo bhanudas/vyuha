@@ -236,6 +236,57 @@ public class vy_Tests {
     }
 
     @isTest
+    static void onDemandInvocableTripleClause () {
+        integer testSize = 10;
+        List < Contact > testContacts = new List < Contact > ();
+        for ( integer i = 0; i < testSize; i++ ) {
+            Contact c = new Contact ();
+            c.firstName = 'test';
+            c.lastName = 'oldValue';
+            c.email = 'test@test.com';
+            testContacts.add ( c );
+        }
+        insert testContacts;
+
+        String jobName = 'Test On Demand';
+        String flowInterviewName = 'Vyuha_On_Demand_Test';
+        String targetObject = 'Contact';
+        String fieldName1 = 'LastName';
+        String fieldValue1 = 'oldvalue';
+        String fieldName2 = 'FirstName';
+        String fieldValue2 = 'test';
+        String fieldName3 = 'Email';
+        String fieldValue3 = 'test@test.com';
+        Integer batchSize = 25;
+
+        Test.startTest ();
+        vy_OnDemandInvocable.Parameters params = new vy_OnDemandInvocable.Parameters ();
+        params.flowApiName = flowInterviewName;
+        params.targetObject = targetObject;
+        params.filterFieldApiName1 = fieldName1;
+        params.filterValue1 = fieldValue1;
+        params.filterFieldApiName2 = fieldName2;
+        params.filterValue2 = fieldValue2;
+        params.filterFieldApiName3 = fieldName3;
+        params.filterValue3 = fieldValue3;
+        params.onDemandName = jobName;
+        params.batchSize = batchSize;
+        params.notificationEmail = null;
+        List < vy_OnDemandInvocable.Parameters > paramList = new List < vy_OnDemandInvocable.Parameters > ();
+        paramList.add ( params );
+        vy_OnDemandInvocable.invocableMethod ( paramList );
+        Test.stopTest ();
+
+        // query contacts
+        testContacts = [ SELECT ID, LastName FROM Contact ];
+
+        for ( Contact c : testContacts ) {
+            System.assertEquals ( 'Vyuha', c.LastName );
+        }
+
+    }
+
+    @isTest
     static void onDemandInvocableDualClause2 () {
         // Test to make sure that the second filter does actually filter out
         integer testSize = 10;
