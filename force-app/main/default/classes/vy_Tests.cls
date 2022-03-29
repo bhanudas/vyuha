@@ -11,6 +11,36 @@ public class vy_Tests {
         return formation;
     }
 
+    private static void setupSelectiveData () {
+
+        // create two accounts
+        Account a1 = new Account ();
+        a1.Name = 'Alpha';
+        Account a2 = new Account ();
+        a2.Name = 'Beta';
+        Account [] accounts = new Account [] { a1, a2 };
+        insert accounts;
+
+        // create three sets of contacts
+        // sets 1, 2, 3
+        buildContacts ( 10, 'Johnny', 'Aloha', a1 );
+        buildContacts ( 10, 'Sandra', 'Aloha', a2 );
+        buildContacts ( 10, 'Johnny', 'Jones', a2 );
+
+    }
+
+    private static void buildContacts ( Integer contactCount, String firstName, String lastName, Account parentAccount ){
+        List < Contact > contacts = new List < Contact > ();
+        for ( Integer i = 0; i < contactCount; i++ ) {
+            Contact c = new Contact ();
+            c.FirstName = firstName;
+            c.LastName = lastName;
+            c.AccountId = parentAccount.Id;
+            contacts.add ( c );
+        }
+        insert contacts;
+    }
+
     @isTest
     public static void processor_basic () {
         Map < String, Object > params = new Map < String, Object > ();
@@ -369,6 +399,120 @@ public class vy_Tests {
         for ( Contact c : testContacts ) {
             System.assertEquals ( 'Vyuha', c.LastName );
         }
+
+    }
+
+    @isTest
+    static void selectiveTwoParam () {
+
+        setupSelectiveData ();
+        // setup job
+        String jobName = 'Test On Demand';
+        String flowInterviewName = 'Vyuha_On_Demand_Test';
+        String targetObject = 'Contact';
+        String fieldName1 = 'LastName';
+        String fieldValue1 = 'Aloha';
+        String fieldName2 = 'FirstName';
+        string fieldValue2 = 'Johnny';
+        Integer batchSize = 25;
+
+        Test.startTest ();
+        vy_OnDemandInvocable.Parameters params = new vy_OnDemandInvocable.Parameters ();
+        params.flowApiName = flowInterviewName;
+        params.targetObject = targetObject;
+        params.filterFieldApiName1 = fieldName1;
+        params.filterValue1 = fieldValue1;
+        params.filterFieldApiName2 = fieldName2;
+        params.filterValue2 = fieldValue2;
+        params.onDemandName = jobName;
+        params.batchSize = batchSize;
+        params.notificationEmail = null;
+        List < vy_OnDemandInvocable.Parameters > paramList = new List < vy_OnDemandInvocable.Parameters > ();
+        paramList.add ( params );
+        vy_OnDemandInvocable.invocableMethod ( paramList );
+        Test.stopTest ();
+
+        // query contacts
+        List < Contact > testContacts = [ SELECT ID, LastName FROM Contact WHERE LastName = 'Vyuha' ];
+
+        System.assertEquals ( 10, testContacts.size ());
+
+    }
+
+    @isTest
+    static void selectiveOneParam () {
+
+        setupSelectiveData ();
+        List < Contact > checkList = [ SELECT Id, Name FROM Contact WHERE LastName = 'Aloha' AND FirstName = 'Johnny' ];
+        System.assertEquals ( 10, checkList.size ());
+        // setup job
+        String jobName = 'Test On Demand';
+        String flowInterviewName = 'Vyuha_On_Demand_Test';
+        String targetObject = 'Contact';
+        String fieldName1 = 'LastName';
+        String fieldValue1 = 'Aloha';
+        Integer batchSize = 25;
+
+        Test.startTest ();
+        vy_OnDemandInvocable.Parameters params = new vy_OnDemandInvocable.Parameters ();
+        params.flowApiName = flowInterviewName;
+        params.targetObject = targetObject;
+        params.filterFieldApiName1 = fieldName1;
+        params.filterValue1 = fieldValue1;
+        params.onDemandName = jobName;
+        params.batchSize = batchSize;
+        params.notificationEmail = null;
+        List < vy_OnDemandInvocable.Parameters > paramList = new List < vy_OnDemandInvocable.Parameters > ();
+        paramList.add ( params );
+        vy_OnDemandInvocable.invocableMethod ( paramList );
+        Test.stopTest ();
+
+        // query contacts
+        List < Contact > testContacts = [ SELECT ID, LastName FROM Contact WHERE LastName = 'Vyuha' ];
+
+        System.assertEquals ( 20, testContacts.size ());
+
+    }
+
+    @isTest
+    static void selectiveThreeParam () {
+
+        setupSelectiveData ();
+
+        // setup job
+        String jobName = 'Test On Demand';
+        String flowInterviewName = 'Vyuha_On_Demand_Test';
+        String targetObject = 'Contact';
+        String fieldName1 = 'LastName';
+        String fieldValue1 = 'Aloha';
+        String fieldName2 = 'FirstName';
+        String fieldValue2 = 'Johnny';
+        String fieldName3 = 'Account.Name';
+        String fieldValue3 = 'Alpha';
+        Integer batchSize = 25;
+
+        Test.startTest ();
+        vy_OnDemandInvocable.Parameters params = new vy_OnDemandInvocable.Parameters ();
+        params.flowApiName = flowInterviewName;
+        params.targetObject = targetObject;
+        params.filterFieldApiName1 = fieldName1;
+        params.filterValue1 = fieldValue1;
+        params.filterFieldApiName2 = fieldName2;
+        params.filterValue2 = fieldValue2;
+        params.filterFieldApiName3 = fieldName3;
+        params.filterValue3 = fieldValue3;
+        params.onDemandName = jobName;
+        params.batchSize = batchSize;
+        params.notificationEmail = null;
+        List < vy_OnDemandInvocable.Parameters > paramList = new List < vy_OnDemandInvocable.Parameters > ();
+        paramList.add ( params );
+        vy_OnDemandInvocable.invocableMethod ( paramList );
+        Test.stopTest ();
+
+        // query contacts
+        List < Contact > testContacts = [ SELECT ID, LastName FROM Contact WHERE LastName = 'Vyuha' ];
+
+        System.assertEquals ( 10, testContacts.size ());
 
     }
     

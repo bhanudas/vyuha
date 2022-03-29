@@ -39,7 +39,7 @@ public with sharing class vy_OnDemandInvocable {
                 whereClause2 = '(' + p.filterFieldApiName2 + '=\'' + p.filterValue2 + '\')';
             }
             if (( String.isEmpty ( p.filterFieldApiName3) == false ) && ( String.isEmpty( p.filterValue3 ) == false )) {
-                whereClause2 = '(' + p.filterFieldApiName3 + '=\'' + p.filterValue3 + '\')';
+                whereClause3 = '(' + p.filterFieldApiName3 + '=\'' + p.filterValue3 + '\')';
             }
             // review clauses
             if (( whereClause1 != null ) && ( whereClause2 != null ) && ( whereClause3 != null )) {
