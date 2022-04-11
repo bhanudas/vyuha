@@ -1,45 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>54.0</apiVersion>
     <assignments>
         <name>Set_Title</name>
         <label>Set Title</label>
-        <locationX>324</locationX>
-        <locationY>222</locationY>
+        <locationX>264</locationX>
+        <locationY>398</locationY>
         <assignmentItems>
-            <assignToReference>UserRecord.Title</assignToReference>
+            <assignToReference>Lookup_Contact.LastName</assignToReference>
             <operator>Assign</operator>
             <value>
                 <stringValue>Vyuha</stringValue>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Update_User</targetReference>
+            <targetReference>Update_Contact</targetReference>
         </connector>
     </assignments>
-    <interviewLabel>Vyuha Test {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Vyuha Test</label>
+    <interviewLabel>Vyuha On Demand Test {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Vyuha On Demand Test</label>
     <loops>
         <name>Loop_through_input_IDs</name>
         <label>Loop through input IDs</label>
-        <locationX>131</locationX>
-        <locationY>75</locationY>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
         <assignNextValueToReference>inputID</assignNextValueToReference>
         <collectionReference>inputIDs</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
-            <targetReference>Lookup_User</targetReference>
+            <targetReference>Lookup_Contact</targetReference>
         </nextValueConnector>
     </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordLookups>
-        <name>Lookup_User</name>
-        <label>Lookup User</label>
-        <locationX>133</locationX>
-        <locationY>221</locationY>
-        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <name>Lookup_Contact</name>
+        <label>Lookup Contact</label>
+        <locationX>264</locationX>
+        <locationY>278</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Set_Title</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -47,21 +61,28 @@
                 <elementReference>inputID</elementReference>
             </value>
         </filters>
-        <object>User</object>
-        <outputReference>UserRecord</outputReference>
-        <queriedFields>Email</queriedFields>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
-        <name>Update_User</name>
-        <label>Update User</label>
-        <locationX>509</locationX>
-        <locationY>217</locationY>
+        <name>Update_Contact</name>
+        <label>Update Contact</label>
+        <locationX>264</locationX>
+        <locationY>518</locationY>
         <connector>
             <targetReference>Loop_through_input_IDs</targetReference>
         </connector>
-        <inputReference>UserRecord</inputReference>
+        <inputReference>Lookup_Contact</inputReference>
     </recordUpdates>
-    <startElementReference>Loop_through_input_IDs</startElementReference>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Loop_through_input_IDs</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
     <variables>
         <name>inputID</name>
         <dataType>String</dataType>

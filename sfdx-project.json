@@ -1,11 +1,23 @@
 {
-  "packageDirectories": [
-    {
-      "path": "force-app",
-      "default": true
+    "packageDirectories": [
+        {
+            "path": "force-app",
+            "default": true,
+            "package": "VyuhaForSpire",
+            "versionName": "ver 0.1",
+            "versionNumber": "0.1.0.NEXT"
+        }
+    ],
+    "namespace": "",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "sourceApiVersion": "54.0",
+    "packageAliases": {
+        "VyuhaForSpire": "0Ho5c0000004CFWCA2",
+        "VyuhaForSpire@0.1.0-3": "04t5c0000014PbhAAE",
+        "VyuhaForSpire@0.1.0-4": "04t5c0000014PbmAAE",
+        "VyuhaForSpire@0.1.0-5": "04t5c0000014PoKAAU",
+        "VyuhaForSpire@0.1.0-6": "04t5c0000014PoPAAU",
+        "VyuhaForSpire@0.1.0-7": "04t5c0000014QXzAAM",
+        "VyuhaForSpire@0.1.0-8": "04t5c0000014R9YAAU"
     }
-  ],
-  "namespace": "",
-  "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "43.0"
 }

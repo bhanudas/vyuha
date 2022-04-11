@@ -33,6 +33,10 @@ global class vy_MockService implements System.StubProvider {
                 system.debug ( 'vy_MockService - vy_Formation - getBatchSize ' + params );
                 return vy_Formation_getBatchSize ();
             }
+            if ( stubbedMethodName == 'getErrorMessage' ) {
+                system.debug ( 'vy_MockService - vy_Formation - getErrorMessage ' + params );
+                return vy_Formation_getErrorMessage ();
+            }
         }
 
         return null;
@@ -58,6 +62,11 @@ global class vy_MockService implements System.StubProvider {
     private integer vy_Formation_getBatchSize () {
         
         return this.formation.getBatchSize ();
+    }
+
+    private string vy_Formation_getErrorMessage () {
+        
+        return this.formation.getErrorMessage ();
     }
 
 }
